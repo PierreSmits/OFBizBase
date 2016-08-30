@@ -50,4 +50,7 @@ order.properties setting is: order.item.comment.enable=Y
     description="Allow comment on Order Item. Choices are: Y or N."
     />
     
+    <SystemProperty systemResourceId="order" systemPropertyId="marketing.tracking.enable" systemPropertyValue="N"
+        description="Allow tracking in marketing component (optional). Choices are: Y or N."
+    />
 </entity-engine-xml>
