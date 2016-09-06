@@ -87,7 +87,6 @@ under the License.
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
                     <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
                   </#if>
-                <#-- </td> -->
               <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
                 <#assign giftCard = paymentMethodValueMap.giftCard>
                 <td class="label" valign="top">
@@ -109,7 +108,6 @@ under the License.
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
                     <a href="<@ofbizUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
                   </#if>
-                <#-- </td> -->
               <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
                 <#assign eftAccount = paymentMethodValueMap.eftAccount>
                 <td class="label" valign="top">
@@ -125,7 +123,6 @@ under the License.
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
                     <a href="<@ofbizUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
                   </#if>
-                <#-- </td> -->
               <#elseif "COMPANY_CHECK" == paymentMethod.paymentMethodTypeId>
                 <#assign checkAccount = paymentMethodValueMap.companyCheckAccount>
                 <td class="label" valign="top">
@@ -141,8 +138,9 @@ under the License.
                   <#if paymentMethod.thruDate?has_content>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</#if>
                 </td>
                 <td class="button-col">
-                  &nbsp;
-                <#-- </td> -->
+                <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                    <a href="<@ofbizUrl>AddCheckAccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                </#if>
               <#elseif "PERSONAL_CHECK" == paymentMethod.paymentMethodTypeId>
                 <#assign checkAccount = paymentMethodValueMap.personalCheckAccount>
                 <td class="label" valign="top">
@@ -157,8 +155,9 @@ under the License.
                   <#if paymentMethod.thruDate?has_content>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</#if>
                 </td>
                 <td class="button-col">
-                  &nbsp;
-                <#-- </td> -->
+                <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                    <a href="<@ofbizUrl>AddCheckAccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                </#if>
               <#elseif "CERTIFIED_CHECK" == paymentMethod.paymentMethodTypeId>
                 <#assign checkAccount = paymentMethodValueMap.certifiedCheckAccount>
                 <td class="label" valign="top">
@@ -173,8 +172,9 @@ under the License.
                   <#if paymentMethod.thruDate?has_content>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</#if>
                 </td>
                 <td class="button-col">
-                &nbsp;
-                <#-- </td> -->
+                <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                    <a href="<@ofbizUrl>AddCheckAccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>">${uiLabelMap.CommonUpdate}</a>
+                </#if>
               <#else>
                 <td class="button-col">
                   &nbsp;

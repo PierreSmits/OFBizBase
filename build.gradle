@@ -41,6 +41,11 @@ javadoc.failOnError = false
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
+// Enforces UTF-8 java compilation encoding on Windows platform
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 // root and subproject settings
 defaultTasks 'build'
 
@@ -263,6 +268,28 @@ eclipse.classpath.file.whenMerged { classpath ->
     }
 }
 tasks.eclipse.dependsOn(cleanEclipse)
+
+/* OWASP plugin
+ *
+ * If project property "enableOwasp" is flagged then
+ * gradle will download required dependencies and
+ * activate Gradle's OWASP plugin and its related tasks.
+ *
+ * Syntax: gradlew -PenableOwasp dependencyCheck
+ */
+buildscript {
+    if (project.hasProperty('enableOwasp')) {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'org.owasp:dependency-check-gradle:1.4.0'
+        }
+    }
+}
+if (project.hasProperty('enableOwasp')) {
+    apply plugin: 'org.owasp.dependencycheck'
+}
 
 /* ========================================================
  * Tasks

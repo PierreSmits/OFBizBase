@@ -2269,6 +2269,9 @@
         <value xml:lang="zh">编辑电子资金转账账户</value>
         <value xml:lang="zh-TW">編輯電子資金轉帳帳戶</value>
     </property>
+    <property key="PageTitleEditCheckAccount">
+        <value xml:lang="en">Edit Check Account</value>
+    </property>
     <property key="PageTitleEditGiftCard">
         <value xml:lang="ar">تعديل بطاقة الهدية</value>
         <value xml:lang="cs">Zpracovat dárkový poukaz</value>
@@ -9095,6 +9098,9 @@
         <value xml:lang="vi">Thêm mới ghi chú nội bộ</value>
         <value xml:lang="zh">新建内部便笺</value>
         <value xml:lang="zh-TW">新建內部便箋</value>
+    </property>
+    <property key="PartyNewPartiesCreated">
+        <value xml:lang="en">${partiesCreated} new parties created"</value>
     </property>
     <property key="PartyNewPassword">
         <value xml:lang="ar">كلمة سر جديدة</value>
