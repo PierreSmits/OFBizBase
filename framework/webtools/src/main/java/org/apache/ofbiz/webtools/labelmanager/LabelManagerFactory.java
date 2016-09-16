@@ -114,6 +114,11 @@ public class LabelManagerFactory {
             if (UtilValidate.isNotEmpty(fileName) && !fileName.equals(fileInfo.getFileName())) {
                 continue;
             }
+            if ("ExampleEntityLabels.xml".equals(fileInfo.getFileName())
+                    || "ProductPromoUiLabels.xml".equals(fileInfo.getFileName())
+                    ) {
+                continue;
+            }
             if (Debug.infoOn()) {
                 Debug.logInfo("Current file : " + fileInfo.getFileName(), module);
             }
@@ -130,11 +135,13 @@ public class LabelManagerFactory {
                                     || labelKey.contains(".partyRelationshipName.")
                                     || labelKey.contains(".geoName.")
                                     || labelKey.contains(".categoryName.")
-                                    || labelKey.contains(".ProductPromoCondition..")
-                                    || labelKey.contains(".ProductPromoOperatorEquality..")
-                                    || labelKey.contains(".Example.") // TODO check all is used here
+                                    || labelKey.contains("FieldDescription.")
+                                    || labelKey.contains("ProductShipmentUomAbbreviation_")
+                                    || labelKey.contains("TemporalExpression_")
+                                    || labelKey.contains(".portalPageName.")
+                                    || labelKey.contains("ProductStoreGroup.productStoreGroupName.NA")
                                     )) { 
-                        continue; // OFBIZ-8154
+                        continue; // OFBIZ-8154 WIP
                     }
                     String labelComment = "";
                     for (Node valueNode : UtilXml.childNodeList(propertyElem.getFirstChild())) {

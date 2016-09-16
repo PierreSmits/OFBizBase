@@ -219,4 +219,48 @@ under the License.
         <description>Delete an existing Budget Scenario Rule Record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+
+    <!-- BudgetAttribute services -->
+    <service name="createBudgetAttribute" default-entity-name="BudgetAttribute" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a new BudgetAttribute record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetAttribute" default-entity-name="BudgetAttribute" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a BudgetAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeBudgetAttribute" default-entity-name="BudgetAttribute" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a BudgetAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createBudgetTypeAttr" default-entity-name="BudgetTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a Budget Type Attr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetTypeAttr" default-entity-name="BudgetTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Budget Type Attr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteBudgetTypeAttr" default-entity-name="BudgetTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a Budget Type Attr Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createBudgetScenarioApplication" default-entity-name="BudgetScenarioApplication" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a Budget Scenario Application Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetScenarioApplication" default-entity-name="BudgetScenarioApplication" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Budget Scenario Application Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteBudgetScenarioApplication" default-entity-name="BudgetScenarioApplication" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a Budget Scenario Application Record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
 </services>

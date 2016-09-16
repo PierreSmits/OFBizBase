@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.bsf.BSFManager;
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.UtilCodec;
 import org.apache.ofbiz.base.util.UtilGenerics;
@@ -74,8 +73,6 @@ public class ControlServlet extends HttpServlet {
             Debug.logInfo("Loading webapp [" + webappName + "], located at " + servletContext.getRealPath("/"), module);
         }
 
-        // configure custom BSF engines
-        configureBsf();
         // initialize the request handler
         getRequestHandler();
     }
@@ -205,7 +202,7 @@ public class ControlServlet extends HttpServlet {
         }
 
         // some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
-        request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, Boolean.TRUE);
+        request.setAttribute(ControlFilter.FORWARDED_FROM_SERVLET, Boolean.TRUE);
 
         String errorPage = null;
         try {
@@ -327,14 +324,6 @@ public class ControlServlet extends HttpServlet {
 
     protected RequestHandler getRequestHandler() {
         return RequestHandler.getRequestHandler(getServletContext());
-    }
-
-    protected void configureBsf() {
-        String[] jsExtensions = {"js"};
-        BSFManager.registerScriptingEngine("javascript", "org.apache.ofbiz.base.util.OfbizJsBsfEngine", jsExtensions);
-
-        String[] smExtensions = {"sm"};
-        BSFManager.registerScriptingEngine("simplemethod", "org.apache.ofbiz.minilang.SimpleMethodBsfEngine", smExtensions);
     }
 
     protected void logRequestInfo(HttpServletRequest request) {

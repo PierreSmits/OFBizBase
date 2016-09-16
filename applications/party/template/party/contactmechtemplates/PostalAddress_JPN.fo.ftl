@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
 distributed with this work for additional information
@@ -17,9 +16,21 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<ofbiz-component name="geronimo"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
-    <resource-loader name="main" type="component"/>
-</ofbiz-component>
+<#escape x as x?xml>
+  <fo:block>${postalAddress.address1!}</fo:block>
+  <#if postalAddress.address2?has_content><fo:block>${postalAddress.address2}</fo:block></#if>
+  <fo:block>
+    ${postalAddress.city!}
+    <#if postalAddress.stateProvinceGeoId?has_content>
+      <#assign stateProvince = postalAddress.getRelatedOne("StateProvinceGeo", true)>
+      , ${stateProvince.geoName}
+    </#if>
+    ${postalAddress.postalCode!}
+  </fo:block>
+  <#if postalAddress.countryGeoId?has_content>
+    <fo:block>
+      <#assign country = postalAddress.getRelatedOne("CountryGeo", true)>
+      ${country.get("geoName", locale)?default(country.geoId)}
+    </fo:block>
+  </#if>
+</#escape>
