@@ -55,7 +55,7 @@ under the License.
         <field name="selectButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
 
-    <form name="FindFacilityOptions" extends="lookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
+    <form name="FindFacilityOptions" extends="LookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
@@ -73,14 +73,14 @@ under the License.
         <field name="internalName"><text-find/></field>
         <field name="inventoryItemId"><text-find/></field>
         <field name="statusId">
-            <drop-down allow-empty="true">
+            <check all-checked="false">
                 <entity-options entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="INV_NON_SER_STTS"/>
                 </entity-options>
                 <entity-options entity-name="StatusItem" key-field-name="statusId">
                     <entity-constraint name="statusTypeId" operator="equals" value="INV_SERIALIZED_STTS"/>
                 </entity-options>
-            </drop-down>
+            </check>
         </field>
         <field name="serialNumber"><text-find/></field>
         <field name="softIdentifier"><text/></field>
@@ -621,7 +621,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    <form name="addGroupToFacility" type="single" target="addGroupToFacility" title=""
+    <form name="AddGroupToFacility" type="single" target="addGroupToFacility" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="FacilityGroupMember"/>
         <field name="facilityId"><hidden/></field>
@@ -630,6 +630,7 @@ under the License.
                 <entity-options entity-name="FacilityGroup" key-field-name="facilityGroupId" description="${facilityGroupName}"/>
             </drop-down>
         </field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
 
@@ -658,14 +659,15 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="FacilityParty"/>
         <field name="facilityId"><hidden/></field>
-        <field name="partyId">
+        <field name="partyId" required-field="true">
             <lookup target-form-name="LookupPartyName"/>
         </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" required-field="true">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType"/>
             </drop-down>
         </field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
     <form name="ListInventoryItemTotals" type="list" target="" title="" list-name="inventoryItemTotals"

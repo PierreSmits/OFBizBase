@@ -494,7 +494,7 @@ under the License.
                 <option key="REQ_MANAGER" description="${uiLabelMap.WorkEffortRequestManager}"/>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -538,7 +538,7 @@ under the License.
     </form>
 
     <!-- request form -->
-    <form name="requestInfo" type="single" title="request information" default-map-name="custRequest"
+    <form name="RequestInfo" type="single" title="request information" default-map-name="custRequest"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
             <set field="lookupPartyId" from-field="custRequest.fromPartyId" default-value="_NA_"/>

@@ -391,7 +391,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>
 
-    <form name="updateFXConversion" type="single" target="updateFXConversion" default-service-name="updateFXConversion"
+    <form name="UpdateFXConversion" type="single" target="updateFXConversion" default-service-name="updateFXConversion"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="uomId" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonCurrency}">
@@ -419,7 +419,7 @@ under the License.
             </drop-down>
         </field>
         <field name="conversionFactor"><text/></field>
-        <field name="fromDate"><date-time/></field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="submitButton" title="${uiLabelMap.AccountingUpdateFX}"><submit/></field>
     </form>
@@ -732,6 +732,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
 
@@ -1182,7 +1183,7 @@ under the License.
                 <entity-options description="${glAccountId}" entity-name="GlAccount"/>
             </drop-down>
         </field>
-        <field name="fromDate"><date-time/></field>
+        <field name="fromDate"><date-time default-value="${nowTimestamp}"/></field>
         <field name="thruDate"><date-time/></field>
         <field name="amountPercentage"><text/></field>
         <field name="submit" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
