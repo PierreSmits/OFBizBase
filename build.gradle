@@ -51,9 +51,6 @@ tasks.withType(JavaCompile) {
 def File gitFooterFile = file("${rootDir}/runtime/GitInfo.ftl")
 def File svnFooterFile = file("${rootDir}/runtime/SvnInfo.ftl")
 
-// init footer files
-initFooterFiles(gitFooterFile, svnFooterFile)
-
 // root and subproject settings
 defaultTasks 'build'
 
@@ -133,6 +130,7 @@ dependencies {
     compile 'org.zapodot:jackson-databind-java-optional:2.4.2'
     compile 'oro:oro:2.0.8'
     compile 'wsdl4j:wsdl4j:1.6.2'
+    testCompile 'org.mockito:mockito-core:1.+'
 
     // general framework runtime libs
     runtime 'de.odysseus.juel:juel-spi:2.2.7'
@@ -143,28 +141,21 @@ dependencies {
     runtime 'org.apache.logging.log4j:log4j-core:2.3'
     runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.3'
     runtime 'org.codeartisans.thirdparties.swing:batik-all:1.8pre-r1084380'
+    runtime 'net.sf.barcode4j:barcode4j:2.1'
+    runtime 'net.sf.barcode4j:barcode4j-fop-ext:2.1'
 
     /* TODO We suspect that all the below dependencies are not needed and can be
      * deleted from this file. They used to be compile time dependencies and we
      * converted them to runtime and OFBiz seems to operate normally without them.
      * We are keeping them until thorough testing is done to ensure correct
-     * operation without these libraries.  
+     * operation without these libraries.
      */
     runtime 'apache-xerces:resolver:2.9.1'
-    runtime 'bouncycastle:bouncycastle-jce-jdk13:112'
-    runtime 'com.google.guava:guava:19.0'
     runtime 'commons-el:commons-el:1.0'
-    runtime 'httpunit:httpunit:1.7'
-    runtime 'jython:jython:2.1'
-    runtime 'net.sf.barcode4j:barcode4j-fop-ext-complete:2.0'
     runtime 'net.sf.dozer:dozer:4.2.1'
-    runtime 'net.sf.ezmorph:ezmorph:0.9.1'
     runtime 'org.apache.axis2:axis2-adb:1.7.1'
-    runtime 'org.apache.geronimo.specs:geronimo-jaxr_1.0_spec:1.0'
-    runtime 'org.apache.geronimo.specs:geronimo-saaj_1.3_spec:1.1'
     runtime 'org.apache.httpcomponents:httpcore:4.4.1'
     runtime 'org.apache.logging.log4j:log4j-1.2-api:2.3'
-    runtime 'org.apache.logging.log4j:log4j-nosql:2.3'
     runtime 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.xpp3:1.1.4c_7'
     runtime 'org.apache.tomcat.extras:tomcat-extras-juli-adapters:8.0.36'
     runtime 'org.apache.xalan:com.springsource.org.apache.xml.serializer:2.7.1'
@@ -181,8 +172,10 @@ dependencies {
     junitReport 'org.apache.ant:ant-junit:1.9.7'
 
     // local libs
+    getDirectoryInActiveComponentsIfExists('lib').each { libDir ->
+        compile fileTree(dir: libDir, include: '**/*.jar')
+    }
     compile fileTree(dir: file("${rootDir}/lib"), include: '**/*.jar')
-    runtime files("${rootDir}/build/libs/ofbiz-base-test.jar")
 }
 
 def excludedJavaSources = []
@@ -207,6 +200,7 @@ sourceSets {
         resources {
             srcDirs = getDirectoryInActiveComponentsIfExists('src/main/java')
             srcDirs += getDirectoryInActiveComponentsIfExists('config')
+            srcDirs += getDirectoryInActiveComponentsIfExists('dtd')
             exclude excludedJavaSources
         }
     }
@@ -240,39 +234,20 @@ eclipse.classpath.file.whenMerged { classpath ->
     def osDirSeparator = os.contains('windows') ? '\\' : '/'
 
     iterateOverActiveComponents { component ->
-        def componentName = component.toString() - rootDir.toString()
+        def componentName = component.toString() - rootDir.toString() - osDirSeparator
+        def eclipseEntry = os.contains('windows') ? componentName.replaceAll("\\\\", "/") : componentName
+
         classpath.entries.removeAll { entry ->
             // remove any "src" entries in .classpath of the form /componentName
             entry.kind == 'src' &&
-            entry.path ==~ '.*/+(' + componentName.tokenize(osDirSeparator).last() + ')$'
-        }
-    }
-    classpath.entries.removeAll { entry ->
-        /* remove "src" entries in .classpath named:
-         *   /framework, /applications, /specialpurpose, /themes and /hot-deploy
-         */
-        entry.kind == 'src' &&
+            entry.path ==~ '.*/+(' + componentName.tokenize(osDirSeparator).last() + ')$' ||
             entry.path ==~ /(\/+framework)$/ ||
             entry.path ==~ /(\/+applications)$/ ||
             entry.path ==~ /(\/+specialpurpose)$/ ||
             entry.path ==~ /(\/+themes)$/ ||
-            entry.path ==~ /(\/+hot-deploy)$/
-    }
-    getDirectoryInActiveComponentsIfExists('config').each { configDir ->
-        /* remove any "src" entries in .classpath of the form componentName/config
-         *
-         * windows format: \framework\base\config
-         * Unix format: /framework/base/config
-         * .classpath format: framework/base/config
-         *
-         * Must convert both windows and unix to .classpath format to
-         * be able to remove it from the file
-         */
-        def relativeDir = configDir.toString() - rootDir.toString() - osDirSeparator
-        def eclipseConfigSrc = os.contains('windows') ? relativeDir.replaceAll("\\\\", "/") : relativeDir
-        classpath.entries.removeAll { entry ->
-            entry.kind == 'src' &&
-            entry.path == eclipseConfigSrc
+            entry.path ==~ /(\/+hot-deploy)$/ ||
+            entry.path ==~ eclipseEntry + '/config' ||
+            entry.path ==~ eclipseEntry + '/dtd'
         }
     }
 }
@@ -758,12 +733,8 @@ task cleanGradle(group: cleanupGroup, description: 'clean generated files from G
     delete file("${rootDir}/.gradle")
 }
 task cleanFooterFiles(group: cleanupGroup, description: 'clean generated footer files') << {
-    if(gitFooterFile.exists()) {
-        gitFooterFile.delete()
-    }
-    if(svnFooterFile.exists()) {
-        svnFooterFile.delete()
-    }
+    delete gitFooterFile
+    delete svnFooterFile
 }
 task cleanAnt(group: cleanupGroup, type: Delete, description: "clean old artifacts generated by Ant") << {
     /* TODO this task is temporary and should be deleted after some
@@ -856,24 +827,6 @@ task svnInfoFooter(group: committerGroup, description: 'Update the Subversion re
     svnFooterFile << '${uiLabelMap.BuiltOn} : ' + "${timestamp}" + System.lineSeparator()
     svnFooterFile << '${uiLabelMap.JavaVersion} : ' + "${org.gradle.internal.jvm.Jvm.current()}"
 }
-
-// ========== hidden support tasks ==========
-
-/* without executing this task, a test would fail that is named
- * org.apache.ofbiz.base.util.test.UtilObjectTests.testGetObjectFromFactory()
- *
- * The test fails because it requires defining a service provider, read more below.
- * http://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Service_Provider
- */
-task createBaseTestServiceProviderJar << {
-    ant.jar(destfile: "${rootDir}/build/libs/ofbiz-base-test.jar") {
-        service(type: 'org.apache.ofbiz.base.util.test.UtilObjectTests$TestFactoryIntf') {
-            provider(classname: 'org.apache.ofbiz.base.util.test.UtilObjectTests$FirstTestFactory')
-            provider(classname: 'org.apache.ofbiz.base.util.test.UtilObjectTests$SecondTestFactory')
-        }
-    }
-}
-classes.dependsOn createBaseTestServiceProviderJar
 
 /* ========================================================
  * Rules-based OFBiz server commands
@@ -1068,14 +1021,4 @@ def activateAndInstallPlugin(pluginId) {
     activatePlugin pluginId
     def gradleRunner = os.contains('windows') ? 'gradlew.bat' : './gradlew'
     exec { commandLine gradleRunner, 'installPlugin', "-PpluginId=${pluginId}" }
-}
-
-def initFooterFiles(gitInfoFile, svnInfoFile) {
-    
-    if(!gitInfoFile.exists()) {
-        gitInfoFile.createNewFile()
-    }
-    if(!svnInfoFile.exists()) {
-        svnInfoFile.createNewFile()
-    }
 }
