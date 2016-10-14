@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.apache.ofbiz.entity;
 
+import org.apache.ofbiz.base.util.Debug;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,14 +28,22 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.*;
 
 public class DelegatorUnitTests {
+    private boolean logErrorOn;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void initialize() {
-        System.setProperty("ofbiz.home", ".");
+        System.setProperty("ofbiz.home", System.getProperty("user.dir"));
         System.setProperty("derby.system.home", "./runtime/data/derby");
+        logErrorOn = Debug.isOn(Debug.ERROR); // save the current setting (to be restored after the tests)
+        Debug.set(Debug.ERROR, false); // disable error logging
+    }
+
+    @After
+    public void restore() {
+        Debug.set(Debug.ERROR, logErrorOn); // restore the error log setting
     }
 
     @Test
@@ -68,16 +78,15 @@ public class DelegatorUnitTests {
 
     @Test
     public void delegatorCreationUsingFactoryGetDelegator() {
-        DelegatorFactory df = new DelegatorFactoryImpl();
-        Delegator delegator = df.getDelegator("default");
+        Delegator delegator = DelegatorFactory.getDelegator("default");
         assertNotNull(delegator);
         assertTrue(delegator instanceof GenericDelegator);
         assertEquals(delegator.getOriginalDelegatorName(), "default");
         assertEquals(delegator.getDelegatorBaseName(), "default");
         assertEquals(delegator.getDelegatorName(), "default");
-        Delegator delegatorWithSameName = df.getDelegator("default");
+        Delegator delegatorWithSameName = DelegatorFactory.getDelegator("default");
         assertSame(delegator, delegatorWithSameName);
-        Delegator delegatorWithNullName = df.getDelegator(null);
+        Delegator delegatorWithNullName = DelegatorFactory.getDelegator(null);
         assertSame(delegator, delegatorWithNullName);
     }
 
