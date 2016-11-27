@@ -1469,7 +1469,7 @@ public class ShoppingCartEvents {
             orderAdjustments = cart.getAdjustments();
             try {
                 orderAdjustmentList = EntityQuery.use(delegator).from("OrderAdjustment").where("orderId", orderId).queryList();
-            } catch (Exception e) {
+            } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
             for (long itr = 1; itr <= groupIndex; itr++) {
@@ -1664,7 +1664,7 @@ public class ShoppingCartEvents {
         String originOrderId = request.getParameter("originOrderId");
         cart.setAttribute("originOrderId", originOrderId);
 
-        if (!UtilValidate.isEmpty(request.getParameter("partyId"))) {
+        if (UtilValidate.isNotEmpty(request.getParameter("partyId"))) {
             partyId = request.getParameter("partyId");
         }
         String userLoginId = request.getParameter("userLoginId");

@@ -32,10 +32,10 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="extInfo" event="onClick" action="javascript:$('#ListParty' + this.value +'_body').toggle(true);collapseFindPartyOptions('ListParty' + this.value +'_body');" title="${uiLabelMap.PartyContactInformation}">
             <radio>
-                <option key="N" description="${uiLabelMap.CommonNone}"/>
-                <option key="P" description="${uiLabelMap.PartyPostal}"/>
-                <option key="T" description="${uiLabelMap.PartyTelecom}"/>
-                <option key="O" description="${uiLabelMap.CommonOther}"/>
+                <option key="${uiLabelMap.CommonNone}" description="N"/>
+                <option key="${uiLabelMap.PartyPostal}" description="P"/>
+                <option key="${uiLabelMap.PartyTelecom}" description="T"/>
+                <option key="${uiLabelMap.CommonOther}" description="O"/>
             </radio>
         </field>
         <field name="hideFields"><hidden value="Y"/></field>
@@ -142,11 +142,9 @@ under the License.
                 <field-map field-name="partyId" from-field="partyId"/>
                 <field-map field-name="userLogin" from-field="userLogin"/>
             </service>
-            <!-- NO_PAGINATOR is set to 'true' to prevent PAGINATOR_NUMBER to increase when we use sub-grid under a grid -->
-            <set field="globalContext.NO_PAGINATOR" value="true" type="Boolean"/>
         </row-actions>
         <field name="partyId" sort-field="true">
-            <hyperlink target="viewprofile" description="${partyId}">
+            <hyperlink description="${partyId}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -199,17 +197,17 @@ under the License.
         <field name="lastName" title="${uiLabelMap.PartyLastName}" required-field="true"><text size="40" maxlength="60"/></field>
         <field name="gender">
             <drop-down allow-empty="true">
-                <option key="M" description="${uiLabelMap.CommonMale}"/>
-                <option key="F" description="${uiLabelMap.CommonFemale}"/>
+                <option key="${uiLabelMap.CommonMale}" description="M"/>
+                <option key="${uiLabelMap.CommonFemale}" description="F"/>
             </drop-down>
         </field>
         <field name="maritalStatus">
             <drop-down allow-empty="true">
-                <option key="S" description="${uiLabelMap.PartyMaritalStatusSingle}"/>
-                <option key="M" description="${uiLabelMap.PartyMaritalStatusMarried}"/>
-                <option key="P" description="${uiLabelMap.PartyMaritalStatusSeparated}"/>
-                <option key="D" description="${uiLabelMap.PartyMaritalStatusDivorced}"/>
-                <option key="W" description="${uiLabelMap.PartyMaritalStatusWidowed}"/>
+                <option key="${uiLabelMap.PartyMaritalStatusSingle}" description="S"/>
+                <option key="${uiLabelMap.PartyMaritalStatusMarried}" description="M"/>
+                <option key="${uiLabelMap.PartyMaritalStatusSeparated}" description="P"/>
+                <option key="${uiLabelMap.PartyMaritalStatusDivorced}" description="D"/>
+                <option key="${uiLabelMap.PartyMaritalStatusWidowed}" description="W"/>
             </drop-down>
         </field>
         <field name="employmentStatusEnumId">
@@ -229,7 +227,7 @@ under the License.
             </drop-down>
         </field>
         <field name="existingCustomer">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="preferredCurrencyUomId">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
@@ -258,7 +256,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -293,7 +291,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -354,10 +352,10 @@ under the License.
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
         <field name="requirePasswordChange">
-            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        <field name="cancelLink" title=" " widget-style="smallSubmit"><hyperlink target="backHome" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelLink" title=" " widget-style="smallSubmit"><hyperlink description="${uiLabelMap.CommonCancelDone}" target="backHome" also-hidden="false"/></field>
     </form>
 
     <form name="UpdatePassword" type="single" target="updatePassword"
@@ -373,7 +371,7 @@ under the License.
         <field name="newPasswordVerify"><password/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -391,7 +389,7 @@ under the License.
         <field name="userLdapDn" use-when="!&quot;true&quot;.equals(ldapEnabled)"><ignored/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -481,10 +479,10 @@ under the License.
         </field>
         <field name="taxAuthPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="isExempt">
-            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="isNexus">
-            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
@@ -504,7 +502,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="deletePartyTaxAuthInfo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyTaxAuthInfo" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -512,10 +510,10 @@ under the License.
             </hyperlink>
         </field>
         <field name="isExempt">
-            <drop-down allow-empty="false"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="false"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="isNexus">
-            <drop-down allow-empty="false"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="false"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
     </form>
 
@@ -528,7 +526,7 @@ under the License.
         <field name="note"><textarea cols="70" rows="10"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -622,35 +620,35 @@ under the License.
             </drop-down>
         </field>
         <field name="USER_ADDRESS_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowAddressSolicitation}?">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
         <field name="HomePhoneTitle" title="${uiLabelMap.PartyHomePhone}" title-area-style="group-label" widget-style="tooltip"><display description="${uiLabelMap.PartyPhoneNumberRequired}" also-hidden="false"/></field>
         <field name="USER_HOME_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_HOME_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_HOME_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
         <field name="USER_HOME_EXT" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
-        <field name="USER_HOME_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="USER_HOME_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down></field>
         <field name="WorkPhoneTitle" title="${uiLabelMap.PartyContactWorkPhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="USER_WORK_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_WORK_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_WORK_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
         <field name="USER_WORK_EXT" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
-        <field name="USER_WORK_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="USER_WORK_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down></field>
         <field name="FaxPhoneTitle" title="${uiLabelMap.PartyContactFaxPhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="USER_FAX_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_FAX_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_FAX_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
         <field name="USER_FAX_EXT" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
-        <field name="USER_FAX_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="USER_FAX_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down></field>
         <field name="MobilePhoneTitle" title="${uiLabelMap.PartyContactMobilePhoneNumber}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field name="USER_MOBILE_COUNTRY" title="${uiLabelMap.CommonCountryCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_MOBILE_AREA" title="${uiLabelMap.PartyAreaCode}"><text size="4" maxlength="10"/></field>
         <field name="USER_MOBILE_CONTACT" title="${uiLabelMap.PartyPhoneNumber}"><text size="15" maxlength="15"/></field>
-        <field name="USER_MOBILE_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="USER_MOBILE_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down></field>
         <field name="EmailAddressTitle" title="${uiLabelMap.PartyEmailAddress}" title-area-style="group-label"><display description=" " also-hidden="false"/></field>
         <field use-when="require_email!=null" name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" required-field="true"><text size="60" maxlength="250"/></field>
         <field use-when="require_email==null" name="USER_EMAIL" title="${uiLabelMap.CommonEmail}" required-field="true"><text size="60" maxlength="250"/></field>
-        <field name="USER_EMAIL_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
+        <field name="USER_EMAIL_ALLOW_SOL" title="${uiLabelMap.PartyContactAllowSolicitation}?"><drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down></field>
         <!-- <field name="USER_ORDER_EMAIL" title="Order Emails (comma separated)" ><text size="60" maxlength="250"/></field> -->
         <field use-when="displayPassword=='Y'" name="USERNAME" title="${uiLabelMap.CommonUsername}" required-field="true"><text size="30" maxlength="250"/></field>
         <field use-when="displayPassword=='Y'" name="PASSWORD" title="${uiLabelMap.CommonPassword}" required-field="true"><password size="15" maxlength="250"/></field>
@@ -695,7 +693,7 @@ under the License.
             <display-entity entity-name="RoleType"/>
         </field>
         <field name="deleteLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="deleteSegmentGroupRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteSegmentGroupRole" also-hidden="false">
                 <parameter param-name="segmentGroupId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -718,7 +716,7 @@ under the License.
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         <!-- <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${donePage}" also-hidden="false">
                 <parameter param-name="segmentGroupId"/>
             </hyperlink>
         </field> -->
@@ -732,7 +730,7 @@ under the License.
         <field use-when="attribute!=null" name="attrName" tooltip="${uiLabelMap.PartyNotModifRecreateAttribute}"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="cancelLink" title=" " widget-style="smallSubmit">
-            <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
+            <hyperlink description="${uiLabelMap.CommonCancelDone}" target="${cancelPage}" also-hidden="false">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -814,8 +812,8 @@ under the License.
         </field>
         <field name="isPublic" title="${uiLabelMap.PartyIsPublic}" map-name="dataResource">
             <drop-down no-current-selected-key="N">
-                <option key="N" description="${uiLabelMap.CommonNo}"/>
-                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="${uiLabelMap.CommonNo}" description="N"/>
+                <option key="${uiLabelMap.CommonYes}" description="Y"/>
             </drop-down>
         </field>
         <field name="createButton" use-when="content==null"><submit button-type="button"/></field>
@@ -852,7 +850,7 @@ under the License.
         <field name="fromDate"><display type="date-time"></display></field>
         <field name="thruDate"><display type="date-time"></display></field>
         <field name="editLink" title=" " widget-style="smallSubmit">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditPartyContents">
+           <hyperlink description="${uiLabelMap.CommonEdit}" target="EditPartyContents" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="dataResourceId"/>
@@ -861,7 +859,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="remove" title=" " widget-style="smallSubmit">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonRemove}" target="removePartyContent">
+           <hyperlink description="${uiLabelMap.CommonRemove}" target="removePartyContent" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="dataResourceId"/>
@@ -918,7 +916,7 @@ under the License.
         <field name="fromDate"><display/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit">
-            <hyperlink target="updatePartyCarrierAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="updatePartyCarrierAccount" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="carrierPartyId"/>
                 <parameter param-name="fromDate"/>
@@ -933,7 +931,7 @@ under the License.
         <field name="partyId"><hidden/></field>
         <field name="carrierPartyId">
             <drop-down allow-empty="false">
-                <entity-options entity-name="PartyRole" description="${partyId}" key-field-name="partyId">
+                <entity-options entity-name="PartyRole" key-field-name="partyId" description="${partyId}">
                     <entity-constraint name="roleTypeId" operator="equals" value="CARRIER"/>
                     <entity-constraint name="partyId" operator="not-equals" value="_NA_"/>
                 </entity-options>
@@ -1199,7 +1197,7 @@ under the License.
         <field name="description" title="${uiLabelMap.PartyRole}"><display/></field>
         <field name="parentTypeId"><display-entity entity-name="RoleType" key-field-name="roleTypeId"/></field>
         <field name="remove">
-            <hyperlink target="deleterole" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleterole">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
             </hyperlink>
@@ -1282,7 +1280,7 @@ under the License.
     </form>
     <form name="PartySalesOpportunities" type="list" list-name="salesOpportunities" default-table-style="basic-table hover-bar">
         <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}">
-            <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
+            <hyperlink description="${opportunityName} [${salesOpportunityId}]" target="ViewSalesOpportunity">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>
         </field>
@@ -1303,7 +1301,7 @@ under the License.
         <field name="partyIdentTypeDesc"><display /></field>
         <field name="idValue"><display /></field>
         <field name="delete">
-             <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
+             <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyIdentification">
                  <parameter param-name="partyId"/>
                  <parameter param-name="partyIdentificationTypeId"/>
              </hyperlink>
@@ -1374,7 +1372,7 @@ under the License.
         <field name="thruDate"><display/></field>
         <field name="sequenceNum"><display/></field>
         <field name="editLink" widget-style="buttontext" title="${uiLabelMap.CommonEdit}">
-           <hyperlink target="FindProductStoreRoles" description="${uiLabelMap.CommonEdit}">
+           <hyperlink description="${uiLabelMap.CommonEdit}" target="FindProductStoreRoles">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="roleTypeId"/>
@@ -1382,7 +1380,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="deleteLink" widget-style="buttontext" title="${uiLabelMap.CommonDelete}">
-            <hyperlink target="storeRemoveRole" description="${uiLabelMap.CommonDelete}">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="storeRemoveRole">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="roleTypeId"/>
@@ -1407,7 +1405,7 @@ under the License.
                         <condition-expr field-name="roleTypeId" value="EMPLOYEE" operator="equals"/>
                     </condition-list>
                     <condition-expr field-name="statusId" value="PARTY_DISABLED" operator="not-equals"/>
-                    <condition-expr field-name="partyId" from-field="partyId" operator="equals" value="${parameters.partyId}" ignore-if-empty="true"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="partyId" value="${parameters.partyId}" ignore-if-empty="true"/>
                 </condition-list>
                 <order-by field-name="partyId"/>
             </entity-condition>

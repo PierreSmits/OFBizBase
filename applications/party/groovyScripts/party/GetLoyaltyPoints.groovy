@@ -17,20 +17,18 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.*;
-
-partyId = parameters.partyId ? parameters.partyId : userLogin.partyId ;
+partyId = parameters.partyId ? parameters.partyId : userLogin.partyId 
 
 if (partyId) {
     // get the system user
-    system = from("UserLogin").where("userLoginId", "system").queryOne();
+    system = from("UserLogin").where("userLoginId", "system").queryOne()
 
-    monthsToInclude = 12;
+    monthsToInclude = 12
 
     Map result = runService('getOrderedSummaryInformation', ["partyId": partyId, "roleTypeId": "PLACING_CUSTOMER", "orderTypeId": "SALES_ORDER",
-            "statusId": "ORDER_COMPLETED", "monthsToInclude": monthsToInclude, "userLogin": system]);
+            "statusId": "ORDER_COMPLETED", "monthsToInclude": monthsToInclude, "userLogin": system])
 
-    context.monthsToInclude = monthsToInclude;
-    context.totalSubRemainingAmount = result.totalSubRemainingAmount;
-    context.totalOrders = result.totalOrders;
+    context.monthsToInclude = monthsToInclude
+    context.totalSubRemainingAmount = result.totalSubRemainingAmount
+    context.totalOrders = result.totalOrders
 }

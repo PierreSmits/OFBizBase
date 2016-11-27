@@ -25,37 +25,35 @@
  * a backlink to the order can be created.
  */
 
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.entity.condition.EntityExpr;
-import org.apache.ofbiz.entity.condition.EntityOperator;
-import org.apache.ofbiz.entity.condition.EntityCondition;
-import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
+import org.apache.ofbiz.entity.util.EntityUtil
 
 // get this field first, it determines which purpose this script satisfies
-orderPaymentPreferenceId = context.orderPaymentPreferenceId;
+orderPaymentPreferenceId = context.orderPaymentPreferenceId
 
 // first purpose: retrieve orderId and paymentPreferenceId
 if (!orderPaymentPreferenceId) {
-  paymentGatewayResponse = context.paymentGatewayResponse;
-  orderPaymentPreference = paymentGatewayResponse.getRelatedOne("OrderPaymentPreference", false);
-  context.orderId = orderPaymentPreference.orderId;
-  context.orderPaymentPreferenceId = orderPaymentPreference.orderPaymentPreferenceId;
+  paymentGatewayResponse = context.paymentGatewayResponse
+  orderPaymentPreference = paymentGatewayResponse.getRelatedOne("OrderPaymentPreference", false)
+  context.orderId = orderPaymentPreference.orderId
+  context.orderPaymentPreferenceId = orderPaymentPreference.orderPaymentPreferenceId
 } else {
     // second purpose: grab the latest gateway response of the orderpaymentpreferenceId
-    orderPaymentPreference = from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceId).queryOne();
-    gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, ["transactionDate DESC"], false);
-    EntityUtil.filterByCondition(gatewayResponses, EntityCondition.makeCondition("transCodeEnumId", EntityOperator.EQUALS, "PGT_AUTHORIZE"));
+    orderPaymentPreference = from("OrderPaymentPreference").where("orderPaymentPreferenceId", orderPaymentPreferenceId).queryOne()
+    gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, ["transactionDate DESC"], false)
+    EntityUtil.filterByCondition(gatewayResponses, EntityCondition.makeCondition("transCodeEnumId", EntityOperator.EQUALS, "PGT_AUTHORIZE"))
     
     if (gatewayResponses) {
-        latestAuth = gatewayResponses[0];
-        context.paymentGatewayResponse = latestAuth;
+        latestAuth = gatewayResponses[0]
+        context.paymentGatewayResponse = latestAuth
     } else {
         // todo: some kind of error telling user to re-authorize
     }
     
-    context.orderId = orderPaymentPreference.orderId;
+    context.orderId = orderPaymentPreference.orderId
 }
 // get the list of payments associated to gateway response
 if (context.paymentGatewayResponse) {
-    context.payments = context.paymentGatewayResponse.getRelated("Payment", null, null, false);
+    context.payments = context.paymentGatewayResponse.getRelated("Payment", null, null, false)
 }

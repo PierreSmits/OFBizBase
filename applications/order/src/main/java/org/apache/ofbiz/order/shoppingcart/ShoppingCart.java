@@ -69,6 +69,7 @@ import org.apache.ofbiz.product.config.ProductConfigWrapper;
 import org.apache.ofbiz.product.product.ProductWorker;
 import org.apache.ofbiz.product.store.ProductStoreWorker;
 import org.apache.ofbiz.service.LocalDispatcher;
+import org.apache.ofbiz.service.GenericServiceException;
 import org.apache.ofbiz.service.ServiceUtil;
 
 /**
@@ -477,6 +478,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
                 supplierProduct = productSuppliers.get(0);
             }
+        } catch (GenericServiceException e) {
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
         } catch (Exception e) {
             Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
         }
@@ -1727,7 +1730,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (UtilValidate.isNotEmpty(orderId)) {
             try {
                 List<GenericValue> declinedPaymentMethods = EntityQuery.use(delegator).from("OrderPaymentPreference").where("orderId", orderId, "statusId", "PAYMENT_DECLINED").queryList();
-                if (!UtilValidate.isEmpty(declinedPaymentMethods)) {
+                if (UtilValidate.isNotEmpty(declinedPaymentMethods)) {
                     List<String> paymentMethodIdsToRemove = new ArrayList<String>();
                     for (GenericValue opp : declinedPaymentMethods) {
                         paymentMethodIdsToRemove.add(opp.getString("paymentMethodId"));
@@ -2249,7 +2252,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 if (UtilValidate.isNotEmpty(shipItems)) {
                     for (ShoppingCartItem cartItem : shipItems) {
                         GenericValue product = cartItem.getProduct();
-                        if (UtilValidate.isNotEmpty(product)) {
+                        if (product != null) {
                             if (!ProductWorker.isShippableToAddress(product, shippingAddress)) {
                                 throw new IllegalArgumentException("The shipping address is not compatible with ProductGeos rules.");
                             }
@@ -3528,6 +3531,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 }
             }
 
+        } catch (GenericEntityException gse) {
+            Debug.logError(gse, module);
+            return null;
+        } catch (GenericServiceException gse) {
+            Debug.logError(gse, module);
+            return null;
         } catch (Exception e) {
             Debug.logError(e, module);
             return null;
@@ -4153,6 +4162,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             try {
                 GenericValue productStore = this.getDelegator().findOne("ProductStore", UtilMisc.toMap("productStoreId", this.getProductStoreId()), true);
                 facilityId = productStore.getString("inventoryFacilityId");
+            } catch (GenericEntityException gee) {
+                Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", locale) + gee.getMessage(), module);
+                return;
             } catch (Exception e) {
                 Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", locale) + e.getMessage(), module);
                 return;
@@ -4210,6 +4222,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                             dropShipQuantity = itemQuantity.subtract(availableToPromise);
                         }
 
+                    } catch (GenericServiceException gee) {
+                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", locale) + gee.getMessage(), module);
                     } catch (Exception e) {
                         Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", locale) + e.getMessage(), module);
                     }
@@ -4233,7 +4247,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                     if (! UtilValidate.isEmpty(supplierProduct)) {
                         supplierPartyId = supplierProduct.getString("partyId");
                     }
-                } catch (Exception e) {
+                } catch (GenericServiceException e) {
                     Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
                 }
 
@@ -4661,7 +4675,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 }
                 if (shippingAddress != null) {
                     GenericValue product = item.getProduct();
-                    if (UtilValidate.isNotEmpty(product)) {
+                    if (product != null) {
                         return ProductWorker.isShippableToAddress(product, shippingAddress);
                     }
                 }

@@ -21,7 +21,7 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Simple-Method" xsi:schemaLocation="http://ofbiz.apache.org/Simple-Method http://ofbiz.apache.org/dtds/simple-methods.xsd">
     <simple-method method-name="createContactMech" short-description="Create Contact Mechanism">
-        <make-value value-field="newValue" entity-name="ContactMech"/>
+        <make-value entity-name="ContactMech" value-field="newValue"/>
         <if-empty field="parameters.contactMechId">
             <sequenced-id sequence-name="ContactMech" field="newValue.contactMechId"/>
             <else>
@@ -225,39 +225,6 @@ under the License.
         </call-service>
     </simple-method>
 
-   <simple-method method-name="createContactMechLink" short-description="Create a link between two ContactMechs, such as PostalAddress and TelecomNumber or email">
-       <!--TODO: need security check of some sort? -->
-       <check-errors/>
-       <make-value value-field="newEntity" entity-name="ContactMechLink"/>
-       <set-pk-fields map="parameters" value-field="newEntity"/>
-       <create-value value-field="newEntity"/>
-   </simple-method>
-   <simple-method method-name="deleteContactMechLink" short-description="Delete a link between two ContactMechs">
-       <!--TODO: need security check of some sort? -->
-       <check-errors/>
-       <make-value value-field="lookupPKMap" entity-name="ContactMechLink"/>
-       <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-       <find-by-primary-key entity-name="ContactMechLink" map="lookupPKMap" value-field="contactMechLinkInstance"/>
-       <remove-value value-field="contactMechLinkInstance"/>
-   </simple-method>
-
-    <!-- contactmech attribute services -->
-    <simple-method method-name="createContactMechAttribute" short-description="createContactMechAttribute">
-        <make-value value-field="newEntity" entity-name="ContactMechAttribute"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateContactMechAttribute" short-description="updateContactMechAttribute">
-        <entity-one entity-name="ContactMechAttribute" value-field="lookedUpValue"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="removeContactMechAttribute" short-description="removeContactMechAttribute">
-        <entity-one entity-name="ContactMechAttribute" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
     <simple-method method-name="sendVerifyEmailAddressNotification" short-description="Send an email to the person for Verification of his Email Address" login-required="false">
         <entity-condition entity-name="ProductStoreEmailSetting" list="productStoreEmailSettings">
             <condition-list>
@@ -268,7 +235,7 @@ under the License.
         <find-by-primary-key value-field="emailAddressVerification" entity-name="EmailAddressVerification" map="lookupHash"/>
         <set field="bodyParameters.verifyHash" from-field="emailAddressVerification.verifyHash"/>
         <first-from-list entry="storeEmail" list="productStoreEmailSettings"/>
-        <entity-and list="webSites" entity-name="WebSite">
+        <entity-and entity-name="WebSite" list="webSites">
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
         <first-from-list entry="webSite" list="webSites"/>

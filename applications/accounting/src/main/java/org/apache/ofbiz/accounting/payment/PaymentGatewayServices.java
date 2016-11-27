@@ -1397,7 +1397,7 @@ public class PaymentGatewayServices {
 
         if (amountToCapture.compareTo(ZERO) > 0) {
             GenericValue productStore = orh.getProductStore();
-            if (!UtilValidate.isEmpty(productStore)) {
+            if (UtilValidate.isNotEmpty(productStore)) {
                 boolean shipIfCaptureFails = UtilValidate.isEmpty(productStore.get("shipIfCaptureFails")) || "Y".equalsIgnoreCase(productStore.getString("shipIfCaptureFails"));
                 if (! shipIfCaptureFails) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, 
@@ -2301,7 +2301,7 @@ public class PaymentGatewayServices {
 
             // get the partyIdTo for the payment, which is who is receiving it
             String partyIdTo = null;
-            if (!UtilValidate.isEmpty(payTo)) {
+            if (UtilValidate.isNotEmpty(payTo)) {
                 // use input pay to party
                 partyIdTo = payTo;
             } else if (invoice != null) {
@@ -2893,6 +2893,8 @@ public class PaymentGatewayServices {
         try {
             dispatcher.addRollbackService("savePaymentGatewayResponse", context, true);
             delegator.create(pgr);
+        } catch (GenericEntityException|GenericServiceException ge) {
+            Debug.logError(ge, module);
         } catch (Exception e) {
             Debug.logError(e, module);
         }
@@ -2909,6 +2911,8 @@ public class PaymentGatewayServices {
             for (GenericValue message : messages) {
                 delegator.create(message);
             }
+        } catch (GenericEntityException|GenericServiceException ge) {
+            Debug.logError(ge, module);
         } catch (Exception e) {
             Debug.logError(e, module);
         }
@@ -3037,7 +3041,7 @@ public class PaymentGatewayServices {
         }
 
         // prepare the order payment preference (facade)
-        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", new HashMap());
+        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", new HashMap<String, Object>());
         orderPaymentPref.set("orderPaymentPreferenceId", "_NA_");
         orderPaymentPref.set("orderId", "_NA_");
         orderPaymentPref.set("presentFlag", "N");

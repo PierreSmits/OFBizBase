@@ -1112,8 +1112,7 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="quoteItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="updateQuoteTerm" engine="simple" default-entity-name="QuoteTerm"
-        location="component://order/minilang/quote/QuoteServices.xml" invoke="updateQuoteTerm">
+    <service name="updateQuoteTerm" engine="entity-auto" default-entity-name="QuoteTerm" invoke="update">
         <description>
             Edit the Quate term.
         </description>
@@ -1192,5 +1191,62 @@ under the License.
          <attribute name="oldContactMechId" type="String" mode="IN" optional="true"/>
          <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
          <attribute name="shipmentMethod" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- OrderContent services -->
+    <service name="createOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderContent</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="expireOrderContent" default-entity-name="OrderContent" engine="entity-auto" invoke="expire" auth="true">
+         <description>Expire a OrderContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteOrderAdjustmentTypeAttr" default-entity-name="OrderAdjustmentTypeAttr" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a OrderAdjustmentTypeAttr</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SalesOrderItemFact</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SalesOrderItemFact</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSalesOrderItemFact" default-entity-name="SalesOrderItemFact" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SalesOrderItemFact</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ProductOrderItem services -->
+    <service name="createProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a ProductOrderItem</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+    </service>
+    <service name="updateProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductOrderItem" default-entity-name="ProductOrderItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a ProductOrderItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

@@ -662,8 +662,8 @@ public final class ProductPromoWorker {
         if (productPromo == null) {
             return "";
         }
-        ArrayList<String> partyClassificationsIncluded = new ArrayList<String>();
-        ArrayList<String> partyClassificationsExcluded = new ArrayList<String>();
+        List<String> partyClassificationsIncluded = new ArrayList<String>();
+        List<String> partyClassificationsExcluded = new ArrayList<String>();
         StringBuilder promoDescBuf = new StringBuilder();
         List<GenericValue> productPromoRules = productPromo.getRelated("ProductPromoRule", null, null, true);
         Iterator<GenericValue> promoRulesIter = productPromoRules.iterator();
@@ -689,7 +689,7 @@ public final class ProductPromoWorker {
 
                 if ("PPIP_PARTY_CLASS".equalsIgnoreCase(productPromoCond.getString("inputParamEnumId"))) {
                     GenericValue partyClassificationGroup = EntityQuery.use(delegator).from("PartyClassificationGroup").where("partyClassificationGroupId", condValue).cache(true).queryOne();
-                    if (UtilValidate.isNotEmpty(partyClassificationGroup) && UtilValidate.isNotEmpty(partyClassificationGroup.getString("description"))) {
+                    if (partyClassificationGroup != null && UtilValidate.isNotEmpty(partyClassificationGroup.getString("description"))) {
                         condValue = partyClassificationGroup.getString("description");
                     }
 
@@ -1106,7 +1106,7 @@ public final class ProductPromoWorker {
         } else if ("PPIP_GEO_ID".equals(inputParamEnumId)) {
             compareBase = Integer.valueOf(1);
             GenericValue shippingAddress = cart.getShippingAddress();
-            if (UtilValidate.isNotEmpty(condValue) && UtilValidate.isNotEmpty(shippingAddress)) {
+            if (UtilValidate.isNotEmpty(condValue) && shippingAddress != null) {
                 if(condValue.equals(shippingAddress.getString("countryGeoId")) || condValue.equals(shippingAddress.getString("countyGeoId")) 
                         || condValue.equals(shippingAddress.getString("postalCodeGeoId")) || condValue.equals(shippingAddress.getString("stateProvinceGeoId"))) {
                     compareBase = Integer.valueOf(0);
@@ -1881,6 +1881,21 @@ public final class ProductPromoWorker {
         // round the amount before setting to make sure we don't get funny numbers in there
         // only round to 3 places, we need more specific amounts in adjustments so that they add up cleaner as part of the item subtotal, which will then be rounded
         amount = amount.setScale(3, rounding);
+        boolean addNewAdjustment = true;
+        List<GenericValue> adjustments = cartItem.getAdjustments();
+        if (UtilValidate.isNotEmpty(adjustments)) {
+            for(GenericValue adjustment : adjustments) {
+                if("PROMOTION_ADJUSTMENT".equals(adjustment.getString("orderAdjustmentTypeId")) && 
+                        productPromoAction.get("productPromoId").equals(adjustment.getString("productPromoId")) &&
+                        productPromoAction.get("productPromoRuleId").equals(adjustment.getString("productPromoRuleId")) &&
+                        productPromoAction.get("productPromoActionSeqId").equals(adjustment.getString("productPromoActionSeqId"))) {
+                    BigDecimal newAmount = amount.add(adjustment.getBigDecimal(amountField));
+                    adjustment.set(amountField, newAmount);
+                    addNewAdjustment = false;
+                }
+            }
+        }
+        if (addNewAdjustment) {
         GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                 UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", amountField, amount,
                         "productPromoId", productPromoAction.get("productPromoId"),
@@ -1894,6 +1909,7 @@ public final class ProductPromoWorker {
         }
 
         cartItem.addAdjustment(orderAdjustment);
+        }
     }
 
     public static void doOrderPromoAction(GenericValue productPromoAction, ShoppingCart cart, BigDecimal amount, String amountField, Delegator delegator) {

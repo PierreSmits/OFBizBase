@@ -94,7 +94,7 @@ under the License.
             <submit button-type="button"/>
         </field>
         <field name="createLink" title=" " widget-style="buttontext" position="1">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
+            <hyperlink description="${uiLabelMap.CommonCreateNew}" target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER" also-hidden="false"/>
         </field>
         -->
     </form>
@@ -105,30 +105,30 @@ under the License.
         </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="LOCAL_FILE">
-                <option key="LOCAL_FILE" description="${uiLabelMap.ContentAbsoluteFile}"/>
-                <option key="OFBIZ_FILE" description="${uiLabelMap.ContentFileRelToOFBizHome}"/>
-                <option key="CONTEXT_FILE" description="${uiLabelMap.ContentFileRelToWebappRoot}"/>
-                <option key="ELECTRONIC_TEXT" description="${uiLabelMap.ContentDataBaseText}"/>
+                <option key="${uiLabelMap.ContentAbsoluteFile}" description="LOCAL_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToOFBizHome}" description="OFBIZ_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToWebappRoot}" description="CONTEXT_FILE"/>
+                <option key="${uiLabelMap.ContentDataBaseText}" description="ELECTRONIC_TEXT"/>
             </drop-down>
         </field>
         <field name="drMimeTypeId" >
             <drop-down no-current-selected-key="text/html">
-                <option key="text/html" description="${uiLabelMap.ContentHtmlText}"/>
-                <option key="text/plain" description="${uiLabelMap.ContentPlainText}"/>
+                <option key="${uiLabelMap.ContentHtmlText}" description="text/html"/>
+                <option key="${uiLabelMap.ContentPlainText}" description="text/plain"/>
             </drop-down>
         </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="LOCAL_FILE">
-                <option key="LOCAL_FILE" description="${uiLabelMap.ContentAbsoluteFile}"/>
-                <option key="OFBIZ_FILE" description="${uiLabelMap.ContentFileRelToOFBizHome}"/>
-                <option key="CONTEXT_FILE" description="${uiLabelMap.ContentFileRelToWebappRoot}"/>
-                <option key="ELECTRONIC_TEXT" description="${uiLabelMap.ContentDataBaseText}"/>
+                <option key="${uiLabelMap.ContentAbsoluteFile}" description="LOCAL_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToOFBizHome}" description="OFBIZ_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToWebappRoot}" description="CONTEXT_FILE"/>
+                <option key="${uiLabelMap.ContentDataBaseText}" description="ELECTRONIC_TEXT"/>
             </drop-down>
         </field>
         <field name="drMimeTypeId" >
             <drop-down no-current-selected-key="text/html">
-                <option key="text/html" description="${uiLabelMap.ContentHtmlText}"/>
-                <option key="text/plain" description="${uiLabelMap.ContentPlainText}"/>
+                <option key="${uiLabelMap.ContentHtmlText}" description="text/html"/>
+                <option key="${uiLabelMap.ContentPlainText}" description="text/plain"/>
             </drop-down>
         </field>
         <field name="drObjectInfo" title="${uiLabelMap.ContentFilePath}">
@@ -154,13 +154,13 @@ under the License.
               </service>
           </actions>
         <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
+            <hyperlink description="${contentId}" target="EditLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
             </hyperlink>
         </field>
         <field name="dummy" title="${uiLabelMap.ContentClip}" widget-style="buttontext" map-name="dummy">
-            <hyperlink also-hidden="false" description="${contentId}" target="clipFindLayout">
+            <hyperlink description="${contentId}" target="clipFindLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
                 <parameter param-name="viewSize"/>
@@ -173,7 +173,7 @@ under the License.
         <field name="drObjectInfo"><display/></field>
         <!--
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removeLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
                 <parameter param-name="contentAssocTypeId"/>
@@ -186,7 +186,7 @@ under the License.
     <form name="ListListLayout" default-entity-name="ContentAssocDataResourceViewFrom" list-name="layoutList" target="" title="" type="list" paginate-target="FindLayout"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="contentId" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
+            <hyperlink description="${contentId}" target="EditLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
             </hyperlink>
@@ -195,7 +195,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="drObjectInfo"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removeLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo" from-field="caContentIdTo"/>
                 <parameter param-name="contentAssocTypeId" from-field="caContentAssocTypeId"/>
@@ -302,10 +302,10 @@ under the License.
         </field>
         <field name="drMimeTypeId" >
             <drop-down>
-                <option key="image/gif" description="${uiLabelMap.ContentGIF}"/>
-                <option key="image/jpeg" description="${uiLabelMap.ContentJPEG}"/>
-                <option key="image/png" description="${uiLabelMap.ContentPNG}"/>
-                <option key="image/tiff" description="${uiLabelMap.ContentTIFF}"/>
+                <option key="${uiLabelMap.ContentGIF}" description="image/gif"/>
+                <option key="${uiLabelMap.ContentJPEG}" description="image/jpeg"/>
+                <option key="${uiLabelMap.ContentPNG}" description="image/png"/>
+                <option key="${uiLabelMap.ContentTIFF}" description="image/tiff"/>
             </drop-down>
         </field>
         <field name="drObjectInfo" title="${uiLabelMap.FormFieldTitle_imageFileName}">
@@ -340,10 +340,10 @@ under the License.
         </field>
         <field name="drMimeTypeId" >
             <drop-down>
-                <option key="image/gif" description="${uiLabelMap.ContentGIF}"/>
-                <option key="image/jpeg" description="${uiLabelMap.ContentJPEG}"/>
-                <option key="image/png" description="${uiLabelMap.ContentPNG}"/>
-                <option key="image/tiff" description="${uiLabelMap.ContentTIFF}"/>
+                <option key="${uiLabelMap.ContentGIF}" description="image/gif"/>
+                <option key="${uiLabelMap.ContentJPEG}" description="image/jpeg"/>
+                <option key="${uiLabelMap.ContentPNG}" description="image/png"/>
+                <option key="${uiLabelMap.ContentTIFF}" description="image/tiff"/>
             </drop-down>
         </field>
         <field name="drObjectInfo" title="${uiLabelMap.FormFieldTitle_imageFileName}">
@@ -388,7 +388,7 @@ under the License.
     <form name="ListRelatedLayouts" default-entity-name="ContentDataResourceView" list-name="entityList" target="" title="" type="list" paginate-target="FindLayout"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
+            <hyperlink description="${contentId}" target="EditLayout" also-hidden="false">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
             </hyperlink>
@@ -419,10 +419,10 @@ under the License.
         </field>
         <field name="drDataResourceTypeId" >
             <drop-down no-current-selected-key="ELECTRONIC_TEXT">
-                <option key="LOCAL_FILE" description="${uiLabelMap.ContentAbsoluteFile}"/>
-                <option key="OFBIZ_FILE" description="${uiLabelMap.ContentFileRelToOFBizHome}"/>
-                <option key="CONTEXT_FILE" description="${uiLabelMap.ContentFileRelToWebappRoot}"/>
-                <option key="ELECTRONIC_TEXT" description="${uiLabelMap.ContentDataBaseText}"/>
+                <option key="${uiLabelMap.ContentAbsoluteFile}" description="LOCAL_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToOFBizHome}" description="OFBIZ_FILE"/>
+                <option key="${uiLabelMap.ContentFileRelToWebappRoot}" description="CONTEXT_FILE"/>
+                <option key="${uiLabelMap.ContentDataBaseText}" description="ELECTRONIC_TEXT"/>
             </drop-down>
         </field>
         <field name="drDataTemplateTypeId" >
@@ -432,8 +432,8 @@ under the License.
         </field>
         <field name="drMimeTypeId">
             <drop-down no-current-selected-key="text/html">
-                <option key="text/html" description="${uiLabelMap.ContentHtmlText}"/>
-                <option key="text/plain" description="${uiLabelMap.ContentPlainText}"/>
+                <option key="${uiLabelMap.ContentHtmlText}" description="text/html"/>
+                <option key="${uiLabelMap.ContentPlainText}" description="text/plain"/>
             </drop-down>
         </field>
         <field name="drObjectInfo" title="${uiLabelMap.ContentFilePath}">

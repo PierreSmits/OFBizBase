@@ -21,68 +21,12 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://ofbiz.apache.org/Simple-Method" xsi:schemaLocation="http://ofbiz.apache.org/Simple-Method http://ofbiz.apache.org/dtds/simple-methods.xsd">
 
-    <!-- ========= GlAccount methods ========= -->
-    <simple-method method-name="createGlAccount" short-description="Create an GlAccount">
-        <make-value entity-name="GlAccount" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
-        <!-- GlAccount uses a sequenced id, so get the next one now and set it... -->
-        <if-empty field="parameters.glAccountId">
-            <sequenced-id sequence-name="GlAccount" field="newEntity.glAccountId"/>
-        <else>
-            <set-pk-fields map="parameters" value-field="newEntity"/>
-        </else>
-        </if-empty>
-        <field-to-result field="newEntity.glAccountId" result-name="glAccountId"/>
-
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateGlAccount" short-description="Update an GlAccount">
-        <make-value entity-name="GlAccount" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="deleteGlAccount" short-description="Delete an GlAccount">
-        <make-value entity-name="GlAccount" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
-    <!-- ========= GlAccountOrganization methods ========= -->
-    <simple-method method-name="createGlAccountOrganization" short-description="Create GlAccountOrganization">
-        <make-value entity-name="GlAccountOrganization" value-field="newEntity"/>
-        <if-empty field="parameters.fromDate">
-            <now-timestamp field="parameters.fromDate"/>
-        </if-empty>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateGlAccountOrganization" short-description="Update GlAccountOrganization">
-        <make-value entity-name="GlAccountOrganization" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="deleteGlAccountOrganization" short-description="Delete GlAccountOrganization">
-        <make-value entity-name="GlAccountOrganization" value-field="lookupPKMap"/>
-        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
-        <find-by-primary-key map="lookupPKMap" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
     <!-- ========= GlJournal methods ========= -->
     <simple-method method-name="quickCreateAcctgTransAndEntries" short-description="Creates an AcctgTrans and two offsetting AcctgTransEntry records">
         <!-- TODO: Do we need to create a GlJournal record here? -->
 
         <!-- first, create the AcctgTrans -->
-        <set-service-fields service-name="createAcctgTrans" to-map="createAcctgTransParams" map="parameters"/>
+        <set-service-fields service-name="createAcctgTrans" map="parameters" to-map="createAcctgTransParams"/>
         <if-empty field="createAcctgTransParams.transactionDate">
             <now-timestamp field="createAcctgTransParams.transactionDate"/>
         </if-empty>
@@ -111,26 +55,6 @@ under the License.
         <field-to-result field="acctgTransId" result-name="acctgTransId"/>
     </simple-method>
 
-    <simple-method method-name="createGlJournal" short-description="Create an GlJournal">
-        <make-value entity-name="GlJournal" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-
-        <!-- GlJournal uses a sequenced id, so get the next one now and set it... -->
-        <sequenced-id sequence-name="GlJournal" field="newEntity.glJournalId"/>
-        <field-to-result field="newEntity.glJournalId" result-name="glJournalId"/>
-
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateGlJournal" short-description="Update an GlJournal">
-        <entity-one entity-name="GlJournal" value-field="lookedUpValue"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="deleteGlJournal" short-description="Delete an GlJournal">
-        <entity-one entity-name="GlJournal" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
     <!-- GlJournal Trial Balance and Post routines -->
     <simple-method method-name="calculateGlJournalTrialBalance" short-description="Calculate Trial Balance for a GlJournal">
         <!-- iterate through all AcctgTrans in this journal and that are not yet posted, and get totals of all debits and of all credits -->
@@ -141,7 +65,7 @@ under the License.
             </condition-list>
         </entity-condition>
 
-        <iterate entry="acctgTrans" list="acctgTransList">
+        <iterate list="acctgTransList" entry="acctgTrans">
             <clear-field field="callServiceMap"/>
             <clear-field field="serviceResults"/>
             <set from-field="acctgTrans.acctgTransId" field="callServiceMap.acctgTransId"/>
@@ -188,7 +112,7 @@ under the License.
                 <condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
             </condition-list>
         </entity-condition>
-        <iterate entry="acctgTrans" list="acctgTransList">
+        <iterate list="acctgTransList" entry="acctgTrans">
             <clear-field field="callServiceMap"/>
             <set from-field="acctgTrans.acctgTransId" field="callServiceMap.acctgTransId"/>
             <call-service service-name="postAcctgTrans" in-map-name="callServiceMap"/>
@@ -221,10 +145,6 @@ under the License.
 
         <set from-field="userLogin.userLoginId" field="lookedUpValue.lastModifiedByUserLogin"/>
         <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    <simple-method method-name="deleteGlReconciliation" short-description="Delete an GlReconciliation">
-        <entity-one entity-name="GlReconciliation" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="updateGlReconciliationLastModified" short-description="Update GlReconciliation LastModified Info">
         <!-- this is just a little method that is meant to be called as an inline call-simple-method target with the context already setup -->
@@ -417,10 +337,10 @@ under the License.
                 <if-compare field="acctgTransEntry.origAmount" operator="less" value="0">
                     <log level="verbose" message="${acctgTransEntry} is going to get inverted"/>
                     <calculate field="acctgTransEntry.origAmount">
-                        <calcop field="acctgTransEntry.origAmount" operator="negative"/>
+                        <calcop operator="negative" field="acctgTransEntry.origAmount"/>
                     </calculate>
                     <calculate field="acctgTransEntry.amount">
-                        <calcop field="acctgTransEntry.amount" operator="negative"/>
+                        <calcop operator="negative" field="acctgTransEntry.amount"/>
                     </calculate>
                     <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
                         <set value="C" field="acctgTransEntry.debitCreditFlag"/>
@@ -764,18 +684,18 @@ under the License.
                 </condition>
                 <then>
                     <calculate field="totalDebitAmount">
-                        <calcop field="totalDebitAmount" operator="add"><calcop field="amount" operator="get"/></calcop>
+                        <calcop operator="add" field="totalDebitAmount"><calcop operator="get" field="amount"/></calcop>
                     </calculate>
                 </then>
                 <else>
                     <calculate field="totalCreditAmount">
-                        <calcop field="totalCreditAmount" operator="add"><calcop field="amount" operator="get"/></calcop>
+                        <calcop operator="add" field="totalCreditAmount"><calcop operator="get" field="amount"/></calcop>
                     </calculate>
                 </else>
             </if>
         </iterate>
         <calculate field="totalAmount">
-            <calcop field="totalCreditAmount" operator="subtract"><calcop field="totalDebitAmount" operator="get"/></calcop>
+            <calcop operator="subtract" field="totalCreditAmount"><calcop operator="get" field="totalDebitAmount"/></calcop>
         </calculate>
         <set field="partyAccountingPreferencesCallMap.organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
         <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesCallMap">
@@ -1043,31 +963,31 @@ under the License.
                 </condition>
                 <then>
                     <calculate field="amount">
-                        <calcop field="amount" operator="negative"/>
+                        <calcop operator="negative" field="amount"/>
                     </calculate>
                 </then>
             </if>
             <if-compare field="isExpenseAccount" operator="equals" value="true" type="Boolean">
                 <calculate field="amount">
-                    <calcop field="amount" operator="negative"/>
+                    <calcop operator="negative" field="amount"/>
                 </calculate>
             </if-compare>
             <calculate field="totalNetIncome">
-                <calcop field="totalNetIncome" operator="add"><calcop field="amount" operator="get"/></calcop>
+                <calcop operator="add" field="totalNetIncome"><calcop operator="get" field="amount"/></calcop>
             </calculate>
             <if-compare field="isExpenseAccount" operator="equals" value="true" type="Boolean">
                 <if-empty field="glAccountTotalsExpenseMap[glAccount.glAccountId]">
                     <set field="glAccountTotalsExpenseMap[glAccount.glAccountId]" value="0.0" type="BigDecimal"/>
                 </if-empty>
                 <calculate field="glAccountTotalsExpenseMap[glAccount.glAccountId]">
-                    <calcop field="glAccountTotalsExpenseMap[glAccount.glAccountId]" operator="add"><calcop field="amount" operator="get"/></calcop>
+                    <calcop operator="add" field="glAccountTotalsExpenseMap[glAccount.glAccountId]"><calcop operator="get" field="amount"/></calcop>
                 </calculate>
             <else>
                 <if-empty field="glAccountTotalsProfitMap[glAccount.glAccountId]">
                     <set field="glAccountTotalsProfitMap[glAccount.glAccountId]" value="0.0" type="BigDecimal"/>
                 </if-empty>
                 <calculate field="glAccountTotalsProfitMap[glAccount.glAccountId]">
-                    <calcop field="glAccountTotalsProfitMap[glAccount.glAccountId]" operator="add"><calcop field="amount" operator="get"/></calcop>
+                    <calcop operator="add" field="glAccountTotalsProfitMap[glAccount.glAccountId]"><calcop operator="get" field="amount"/></calcop>
                 </calculate>
             </else>
             </if-compare>
@@ -1445,7 +1365,7 @@ under the License.
                 </calcop>
             </calculate>
             <!-- if originAmount is equals to 0 do not create transaction, this is causing error in postAcctgTrans -->
-            <if-compare operator="not-equals" field="origAmount" value="0">
+            <if-compare field="origAmount" operator="not-equals" value="0">
                 <!-- Credit -->
                 <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                 <set field="creditEntry.debitCreditFlag" value="C"/>
@@ -1948,7 +1868,7 @@ under the License.
                 <field field="invoice" type="org.apache.ofbiz.entity.GenericValue"/>
             </call-class-method>
             <iterate-map key="taxAuthPartyId" value="taxAuthGeoIds" map="taxAuthPartyAndGeos">
-                <iterate entry="taxAuthGeoId" list="taxAuthGeoIds">
+                <iterate list="taxAuthGeoIds" entry="taxAuthGeoId">
                     <clear-field field="debitEntry"/>
                     <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
                     <set field="debitEntry.debitCreditFlag" value="D"/>
@@ -2056,7 +1976,7 @@ under the License.
                 <iterate list="orderItemBillings" entry="orderItemBilling">
                     <get-related-one value-field="orderItemBilling" relation-name="OrderItem" to-value-field="orderItem"/>
                     <calculate field="amountFromOrder" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
-                        <calcop field="amountFromOrder" operator="add">
+                        <calcop operator="add" field="amountFromOrder">
                             <calcop operator="multiply">
                                 <calcop operator="get" field="orderItemBilling.quantity"/>
                                 <calcop operator="get" field="orderItem.unitPrice"/>
@@ -2115,7 +2035,7 @@ under the License.
                 <field field="invoice" type="org.apache.ofbiz.entity.GenericValue"/>
             </call-class-method>
             <iterate-map key="taxAuthPartyId" value="taxAuthGeoIds" map="taxAuthPartyAndGeos">
-                <iterate entry="taxAuthGeoId" list="taxAuthGeoIds">
+                <iterate list="taxAuthGeoIds" entry="taxAuthGeoId">
                     <clear-field field="debitEntry"/>
                     <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
                     <set field="debitEntry.debitCreditFlag" value="D"/>
@@ -2270,7 +2190,7 @@ under the License.
                 <field field="invoice" type="org.apache.ofbiz.entity.GenericValue"/>
             </call-class-method>
             <iterate-map key="taxAuthPartyId" value="taxAuthGeoIds" map="taxAuthPartyAndGeos">
-                <iterate entry="taxAuthGeoId" list="taxAuthGeoIds">
+                <iterate list="taxAuthGeoIds" entry="taxAuthGeoId">
                     <clear-field field="creditEntry"/>
                     <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                     <set field="creditEntry.debitCreditFlag" value="C"/>
@@ -2359,7 +2279,7 @@ under the License.
             <field field="payment" type="org.apache.ofbiz.entity.GenericValue"/>
         </call-class-method>
 
-        <if-compare value="true" field="isDisbursement" operator="equals" type="Boolean">
+        <if-compare field="isDisbursement" operator="equals" value="true" type="Boolean">
             <set field="organizationPartyId" from-field="payment.partyIdFrom"/>
             <set field="partyId" from-field="payment.partyIdTo"/>
             <set field="roleTypeId" value="BILL_FROM_VENDOR"/>
@@ -2479,7 +2399,7 @@ under the License.
         <!--Cloning AcctgTrans-->
         <clone-value value-field="acctgTrans" new-value-field="newAcctgTrans"/>
         <clear-field field="newAcctgTrans.acctgTransId"/>
-        <set-service-fields to-map="createAcctgTransInMap" service-name="createAcctgTrans" map="newAcctgTrans"/>
+        <set-service-fields service-name="createAcctgTrans" map="newAcctgTrans" to-map="createAcctgTransInMap"/>
         <now-timestamp field="nowTimestamp"/>
         <set field="createAcctgTransInMap.transactionDate" from-field="nowTimestamp"/>
         <set field="createAcctgTransInMap.isPosted" value="N"/>
@@ -2495,7 +2415,7 @@ under the License.
             <!--Cloning AcctgTransEntry-->
             <clone-value value-field="acctgTransEntry" new-value-field="newAcctgTransEntry"/>
             <clear-field field="newAcctgTransEntry.acctgTransId"/>
-            <set-service-fields to-map="createAcctgTransAndEntryInMap" service-name="createAcctgTransEntry" map="newAcctgTransEntry"/>
+            <set-service-fields service-name="createAcctgTransEntry" map="newAcctgTransEntry" to-map="createAcctgTransAndEntryInMap"/>
             <set field="createAcctgTransAndEntryInMap.acctgTransId" from-field="newAcctgTrans.acctgTransId"/>
             <if-compare field="parameters.revert" operator="equals" value="Y">
                 <if-compare field="newAcctgTransEntry.debitCreditFlag" operator="equals" value="D">
@@ -2694,25 +2614,6 @@ under the License.
         <field-to-result field="acctgTransId" result-name="acctgTransId"/>
     </simple-method>
 
-    <!-- Party GlAccount services -->
-     <simple-method method-name="createPartyGlAccount" short-description="Associate a party to a General Ledger Account">
-        <make-value entity-name="PartyGlAccount" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-
-    <simple-method method-name="updatePartyGlAccount" short-description="Update an existing General Ledger Account of a Party">
-        <entity-one entity-name="PartyGlAccount" value-field="lookedUpValue"/>
-        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-
-    <simple-method method-name="deletePartyGlAccount" short-description="Delete an existing General Ledger Account of a Party">
-        <entity-one entity-name="PartyGlAccount" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-
     <!-- Entity Specific Inline Methods -->
     <simple-method method-name="getVarianceReasonGlAccountInline" short-description="Gets VarianceReasonGlAccount on the basis of primary key">
         <entity-one entity-name="VarianceReasonGlAccount" value-field="varianceReasonGlAccount">
@@ -2789,7 +2690,7 @@ under the License.
                 <call-service service-name="createGlAccountCategoryMember" in-map-name="createGlAccountCategoryMemberMap"/>
                 <log level="info" message="GlAccountCategoryMember created for [${glAccountCategoryId}] and [${glAccountId}]"/>
             <else>
-                <set-service-fields service-name="updateGlAccountCategoryMember" to-map="updateGlAccountCategoryMemberMap" map="glAccountCategoryMember"/>
+                <set-service-fields service-name="updateGlAccountCategoryMember" map="glAccountCategoryMember" to-map="updateGlAccountCategoryMemberMap"/>
                 <set field="updateGlAccountCategoryMemberMap.amountPercentage" from-field="amountPercentage" type="BigDecimal"/>
                 <call-service service-name="updateGlAccountCategoryMember" in-map-name="updateGlAccountCategoryMemberMap"/>
             </else>

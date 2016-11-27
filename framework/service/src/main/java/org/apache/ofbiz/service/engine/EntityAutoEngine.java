@@ -90,7 +90,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
 
         try {
             boolean allPksInOnly = true;
-            LinkedList<String> pkFieldNameOutOnly = null;
+            List<String> pkFieldNameOutOnly = null;
             /* Check for each pk if it's :
              * 1. part IN 
              * 2. or part IN and OUT, but without value but present on parameters map
@@ -112,18 +112,22 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
             switch (modelService.invoke) {
             case "create":
                 result = invokeCreate(dctx, parameters, modelService, modelEntity, allPksInOnly, pkFieldNameOutOnly);
+                result.put("successMessage", UtilProperties.getMessage("ServiceUiLabels", "EntityCreatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "update":
                 result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                result.put("successMessage", UtilProperties.getMessage("ServiceUiLabels", "EntityUpdatedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "delete":
                 result = invokeDelete(dctx, parameters, modelService, modelEntity, allPksInOnly);
+                result.put("successMessage", UtilProperties.getMessage("ServiceUiLabels", "EntityDeletedSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             case "expire":
                 result = invokeExpire(dctx, parameters, modelService, modelEntity, allPksInOnly);
                 if (ServiceUtil.isSuccess(result)) {
                     result = invokeUpdate(dctx, parameters, modelService, modelEntity, allPksInOnly);
                 }
+                result.put("successMessage", UtilProperties.getMessage("ServiceUiLabels", "EntityExpiredSuccessfully", UtilMisc.toMap("entityName", modelEntity.getEntityName()), locale));
                 break;
             default:
                 break;
@@ -137,7 +141,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
             Debug.logError(e, "Error doing entity-auto operation for entity [" + modelEntity.getEntityName() + "] in service [" + modelService.name + "]: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ServiceEntityAutoOperation", UtilMisc.toMap("entityName", modelEntity.getEntityName(), "serviceName", modelService.name,"errorString", e.toString()), locale));
         }
-
+        result.put(ModelService.SUCCESS_MESSAGE, result.get("successMessage"));
         return result;
     }
 
@@ -515,7 +519,7 @@ public final class EntityAutoEngine extends GenericAsyncEngine {
     private static Map<String, Object> invokeExpire(DispatchContext dctx, Map<String, Object> parameters, ModelService modelService, ModelEntity modelEntity, boolean allPksInOnly)
             throws GeneralException {
         Locale locale = (Locale) parameters.get("locale");
-        LinkedList<String> fieldThruDates = new LinkedList<String>();
+        List<String> fieldThruDates = new LinkedList<String>();
         boolean thruDatePresent = false;
         String fieldDateNameIn = null;
 

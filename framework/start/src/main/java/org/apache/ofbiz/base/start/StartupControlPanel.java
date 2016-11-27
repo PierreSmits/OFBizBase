@@ -62,15 +62,13 @@ final class StartupControlPanel {
             List<StartupCommand> ofbizCommands) throws StartupException {
 
         List<StartupLoader> loaders = new ArrayList<StartupLoader>();
-        List<String> loaderArgs = StartupCommandUtil.adaptStartupCommandsToLoaderArgs(ofbizCommands);
         Thread adminServer = createAdminServer(config, serverState, loaders);
         Classpath classPath = createClassPath(config);
         NativeLibClassLoader classLoader = createAndSetContextClassLoader(config, classPath);
 
         createLogDirectoryIfMissing(config);
         createRuntimeShutdownHook(config, loaders, serverState);
-        loadStartupLoaders(config, loaders, loaderArgs, serverState, classLoader);
-        startStartupLoaders(loaders, serverState);
+        loadStartupLoaders(config, loaders, ofbizCommands, serverState, classLoader);
         executeShutdownAfterLoadIfConfigured(config, loaders, serverState, adminServer);
     }
 
@@ -225,11 +223,10 @@ final class StartupControlPanel {
 
     private static void loadStartupLoaders(Config config, 
             List<StartupLoader> loaders,
-            List<String> loaderArgs,
+            List<StartupCommand> ofbizCommands,
             AtomicReference<ServerState> serverState,
             NativeLibClassLoader classloader) throws StartupException {
 
-        String[] argsArray = loaderArgs.toArray(new String[loaderArgs.size()]);
         synchronized (loaders) {
             for (Map<String, String> loaderMap : config.loaders) {
                 if (serverState.get() == ServerState.STOPPING) {
@@ -240,7 +237,7 @@ final class StartupControlPanel {
                     Class<?> loaderClass = classloader.loadClass(loaderClassName);
                     StartupLoader loader = (StartupLoader) loaderClass.newInstance();
                     loaders.add(loader); // add before loading, so unload can occur if error during loading
-                    loader.load(config, argsArray);
+                    loader.load(config, ofbizCommands);
                 } catch (ReflectiveOperationException e) {
                     throw new StartupException(e.getMessage(), e);
                 }
@@ -254,24 +251,6 @@ final class StartupControlPanel {
             sb.append(path);
         }
         System.setProperty("java.library.path", sb.toString());
-    }
-
-    private static void startStartupLoaders(List<StartupLoader> loaders, 
-            AtomicReference<ServerState> serverState) throws StartupException {
-
-        synchronized (loaders) {
-            // start the loaders
-            for (StartupLoader loader : loaders) {
-                if (serverState.get() == ServerState.STOPPING) {
-                    return;
-                } else {
-                    loader.start();
-                }
-            }
-        }
-        if(!serverState.compareAndSet(ServerState.STARTING, ServerState.RUNNING)) {
-            throw new StartupException("Error during start");
-        }
     }
 
     private static void executeShutdownAfterLoadIfConfigured(

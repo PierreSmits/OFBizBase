@@ -17,75 +17,65 @@
  * under the License.
  */
 
-import java.util.*;
-import org.apache.ofbiz.entity.*;
-import org.apache.ofbiz.base.util.*;
-import org.apache.ofbiz.base.util.collections.*;
-import org.apache.ofbiz.accounting.invoice.*;
-import org.apache.ofbiz.accounting.payment.*;
-import org.apache.ofbiz.accounting.util.UtilAccounting;
-import java.text.DateFormat;
-import java.math.*;
-import org.apache.ofbiz.entity.condition.EntityCondition;
-import org.apache.ofbiz.entity.condition.EntityConditionList;
-import org.apache.ofbiz.entity.condition.EntityExpr;
-import org.apache.ofbiz.entity.condition.EntityOperator;
-import org.apache.ofbiz.entity.model.*;
-import java.text.NumberFormat;
 
-basePaymentId = parameters.paymentId;
-basePayment = from("Payment").where("paymentId", basePaymentId).queryOne();
+import org.apache.ofbiz.accounting.payment.PaymentWorker
+import org.apache.ofbiz.base.util.UtilNumber
+import org.apache.ofbiz.entity.condition.EntityCondition
+import org.apache.ofbiz.entity.condition.EntityOperator
 
-decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
-rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
+basePaymentId = parameters.paymentId
+basePayment = from("Payment").where("paymentId", basePaymentId).queryOne()
 
-paymentsMapList = [];  // to pass back to the screeen list of unapplied payments
+decimals = UtilNumber.getBigDecimalScale("invoice.decimals")
+rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding")
+
+paymentsMapList = [] // to pass back to the screeen list of unapplied payments
 
 // retrieve payments for the related parties which have not been (fully) applied yet
-List payments = null;
-exprList = [];
-expr = EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, basePayment.getString("partyIdFrom"));
-exprList.add(expr);
-expr = EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, basePayment.getString("partyIdTo"));
-exprList.add(expr);
-expr = EntityCondition.makeCondition("paymentId", EntityOperator.NOT_EQUAL, basePayment.getString("paymentId"));
-exprList.add(expr);
+List payments = null
+exprList = []
+expr = EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, basePayment.getString("partyIdFrom"))
+exprList.add(expr)
+expr = EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, basePayment.getString("partyIdTo"))
+exprList.add(expr)
+expr = EntityCondition.makeCondition("paymentId", EntityOperator.NOT_EQUAL, basePayment.getString("paymentId"))
+exprList.add(expr)
 
 // only payments with received and sent
-exprListStatus = [];
-expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED");
-exprListStatus.add(expr);
-expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_SENT");
-exprListStatus.add(expr);
-orCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.OR);
-exprList.add(orCond);
+exprListStatus = []
+expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED")
+exprListStatus.add(expr)
+expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_SENT")
+exprListStatus.add(expr)
+orCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.OR)
+exprList.add(orCond)
 
-topCond = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+topCond = EntityCondition.makeCondition(exprList, EntityOperator.AND)
 
 payments = from("Payment").where(topCond).orderBy("effectiveDate").queryList()
 
 if (payments)    {
-    basePaymentApplied = PaymentWorker.getPaymentApplied(basePayment);
-    basePaymentAmount = basePayment.getBigDecimal("amount");
-    basePaymentToApply = basePaymentAmount.subtract(basePaymentApplied);
+    basePaymentApplied = PaymentWorker.getPaymentApplied(basePayment)
+    basePaymentAmount = basePayment.getBigDecimal("amount")
+    basePaymentToApply = basePaymentAmount.subtract(basePaymentApplied)
     payments.each { payment ->
         if (PaymentWorker.getPaymentNotApplied(payment).signum() == 1) {  // positiv not applied amount?
            // yes, put in the map
-           paymentMap = [:];
-           paymentMap.paymentId = basePaymentId;
-           paymentMap.toPaymentId = payment.paymentId;
-           paymentMap.currencyUomId = payment.currencyUomId;
-           paymentMap.effectiveDate = payment.effectiveDate.toString().substring(0,10); // list as YYYY-MM-DD
-           paymentMap.amount = payment.getBigDecimal("amount");
-           paymentMap.amountApplied = PaymentWorker.getPaymentApplied(payment);
-           paymentToApply = PaymentWorker.getPaymentNotApplied(payment);
+           paymentMap = [:]
+           paymentMap.paymentId = basePaymentId
+           paymentMap.toPaymentId = payment.paymentId
+           paymentMap.currencyUomId = payment.currencyUomId
+           paymentMap.effectiveDate = payment.effectiveDate.toString().substring(0,10) // list as YYYY-MM-DD
+           paymentMap.amount = payment.getBigDecimal("amount")
+           paymentMap.amountApplied = PaymentWorker.getPaymentApplied(payment)
+           paymentToApply = PaymentWorker.getPaymentNotApplied(payment)
            if (paymentToApply.compareTo(basePaymentToApply) < 0 ) {
-                paymentMap.amountToApply = paymentToApply;
+                paymentMap.amountToApply = paymentToApply
            } else {
-                paymentMap.amountToApply = basePaymentToApply;
+                paymentMap.amountToApply = basePaymentToApply
            }
-           paymentsMapList.add(paymentMap);
+           paymentsMapList.add(paymentMap)
         }
     }
 }
-context.payments = paymentsMapList;
+context.payments = paymentsMapList

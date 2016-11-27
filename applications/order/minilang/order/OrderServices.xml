@@ -101,11 +101,11 @@ under the License.
         </if-not-empty>
 
         <call-service service-name="createRequirement" in-map-name="inputMap">
-            <result-to-field field="parameters.requirementId" result-name="requirementId"/>
+            <result-to-field result-name="requirementId" field="parameters.requirementId"/>
         </call-service>
 
         <!-- create the OrderRequirementCommitment to record the Requirement created for an order item -->
-        <set-service-fields to-map="orderReqCommitParams" service-name="createOrderRequirementCommitment" map="parameters"/>
+        <set-service-fields service-name="createOrderRequirementCommitment" map="parameters" to-map="orderReqCommitParams"/>
         <call-service service-name="createOrderRequirementCommitment" in-map-name="orderReqCommitParams"/>
 
         <field-to-result field="parameters.requirementId" result-name="requirementId"/>
@@ -114,16 +114,16 @@ under the License.
     <simple-method method-name="getProductFacilityAndQuantities" short-description="finds ProductFacility and QOH, ATP inventory for an inventoryItem">
         <!-- Get the ProductFacility for the minimum stock level -->
         <entity-one entity-name="ProductFacility" value-field="productFacility">
-            <field-map from-field="inventoryItem.productId" field-name="productId"/>
-            <field-map from-field="inventoryItem.facilityId" field-name="facilityId"/>
+            <field-map field-name="productId" from-field="inventoryItem.productId"/>
+            <field-map field-name="facilityId" from-field="inventoryItem.facilityId"/>
         </entity-one>
 
         <!-- Get the product's total quantityOnHand in the facility -->
         <set from-field="inventoryItem.productId" field="inputMap.productId"/>
         <set from-field="inventoryItem.facilityId" field="inputMap.facilityId"/>
         <call-service service-name="getInventoryAvailableByFacility" in-map-name="inputMap">
-           <result-to-field field="quantityOnHandTotal" result-name="quantityOnHandTotal"/>
-           <result-to-field field="availableToPromiseTotal" result-name="availableToPromiseTotal"/>
+           <result-to-field result-name="quantityOnHandTotal" field="quantityOnHandTotal"/>
+           <result-to-field result-name="availableToPromiseTotal" field="availableToPromiseTotal"/>
         </call-service>
         <clear-field field="inputMap"/>
     </simple-method>
@@ -146,7 +146,7 @@ under the License.
                 </condition>
                 <then>
                     <entity-one entity-name="ProductStore" value-field="productStore">
-                        <field-map from-field="order.productStoreId" field-name="productStoreId"/>
+                        <field-map field-name="productStoreId" from-field="order.productStoreId"/>
                     </entity-one>
                     <set from-field="productStore.requirementMethodEnumId" field="requirementMethodId"/>
                 </then>
@@ -180,7 +180,7 @@ under the License.
         <if-not-empty field="parameters.itemIssuanceId">
             <entity-one entity-name="ItemIssuance" auto-field-map="true" value-field="itemIssuance"/>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem">
-                <field-map from-field="itemIssuance.inventoryItemId" field-name="inventoryItemId"/>
+                <field-map field-name="inventoryItemId" from-field="itemIssuance.inventoryItemId"/>
             </entity-one>
         <else>
             <entity-one entity-name="InventoryItem" auto-field-map="true" value-field="inventoryItem"/>
@@ -198,7 +198,7 @@ under the License.
                 <!-- No requirements are created if we are already under stock -->
                 <if-compare-field field="quantityOnHandTotal" to-field="productFacility.minimumStock" operator="greater-equals" type="BigDecimal">
                     <calculate field="newQuantityOnHand">
-                        <calcop field="quantityOnHandTotal" operator="subtract">
+                        <calcop operator="subtract" field="quantityOnHandTotal">
                             <calcop operator="get" field="parameters.quantity"/>
                         </calcop>
                     </calculate>
@@ -214,7 +214,7 @@ under the License.
                         </if-not-empty>
                         <set value="PRODUCT_REQUIREMENT" field="inputMap.requirementTypeId"/>
                         <call-service service-name="createRequirement" in-map-name="inputMap">
-                            <result-to-field field="parameters.requirementId" result-name="requirementId"/>
+                            <result-to-field result-name="requirementId" field="parameters.requirementId"/>
                         </call-service>
                         <field-to-result field="parameters.requirementId" result-name="requirementId"/>
                     </if-compare-field>
@@ -245,7 +245,7 @@ under the License.
                 <!-- this service is supposed to be called after inventory is reserved, so inventory should have been updated already -->
                 <if-compare-field field="availableToPromiseTotal" to-field="productFacility.minimumStock" operator="less" type="BigDecimal">
                     <calculate field="oldAvailableToPromise">
-                        <calcop field="availableToPromiseTotal" operator="add">
+                        <calcop operator="add" field="availableToPromiseTotal">
                             <calcop operator="get" field="parameters.quantity"/>
                         </calcop>
                     </calculate>
@@ -261,7 +261,7 @@ under the License.
                         </if-not-empty>
                         <set value="PRODUCT_REQUIREMENT" field="inputMap.requirementTypeId"/>
                         <call-service service-name="createRequirement" in-map-name="inputMap">
-                            <result-to-field field="parameters.requirementId" result-name="requirementId"/>
+                            <result-to-field result-name="requirementId" field="parameters.requirementId"/>
                         </call-service>
                         <field-to-result field="parameters.requirementId" result-name="requirementId"/>
                     </if-compare-field>
@@ -298,7 +298,7 @@ under the License.
             <if-compare-field field="availableToPromiseTotal" to-field="minimumStock" operator="less" type="BigDecimal">
                 <!-- what is the right quantity?  It is the lesser of the actual quantity and the quantity required to bring us back up to minimum stock -->
                 <calculate field="quantityShortfall">
-                    <calcop field="minimumStock" operator="subtract">
+                    <calcop operator="subtract" field="minimumStock">
                         <calcop operator="get" field="availableToPromiseTotal"/>
                     </calcop>
                 </calculate>
@@ -325,7 +325,7 @@ under the License.
                         <condition-expr field-name="statusId" operator="not-equals" value="REQ_REJECTED"/>
                     </condition-list>
                 </entity-condition>
-                <iterate entry="requirement" list="requirements">
+                <iterate list="requirements" entry="requirement">
                     <calculate field="existingRequirementTotal">
                         <calcop operator="get" field="existingRequirementTotal"/>
                         <calcop operator="get" field="requirement.quantity"/>
@@ -356,7 +356,7 @@ under the License.
         <check-errors/>
 
         <entity-and entity-name="ProductFacility" list="products">
-            <field-map from-field="parameters.facilityId" field-name="facilityId"/>
+            <field-map field-name="facilityId" from-field="parameters.facilityId"/>
         </entity-and>
 
         <iterate list="products" entry="productFacility">
@@ -383,8 +383,8 @@ under the License.
                         <set from-field="productFacility.productId" field="inputMap.productId"/>
                         <set from-field="productFacility.facilityId" field="inputMap.facilityId"/>
                         <call-service service-name="getInventoryAvailableByFacility" in-map-name="inputMap">
-                           <result-to-field field="quantityOnHandTotal" result-name="quantityOnHandTotal"/>
-                           <result-to-field field="availableToPromiseTotal" result-name="availableToPromiseTotal"/>
+                           <result-to-field result-name="quantityOnHandTotal" field="quantityOnHandTotal"/>
+                           <result-to-field result-name="availableToPromiseTotal" field="availableToPromiseTotal"/>
                         </call-service>
 
                         <if-compare field="requirementMethodId" operator="equals" value="PRODRQM_STOCK">
@@ -406,7 +406,7 @@ under the License.
                             </if-not-empty>
 
                             <calculate field="quantityShortfall">
-                                <calcop field="productFacility.minimumStock" operator="subtract">
+                                <calcop operator="subtract" field="productFacility.minimumStock">
                                     <calcop operator="get" field="currentQuantity"/>
                                 </calcop>
                             </calculate>
@@ -417,7 +417,7 @@ under the License.
                             <set value="PRODUCT_REQUIREMENT" field="inputMap.requirementTypeId"/>
                             <set from-field="parameters.facilityId" field="inputMap.facilityId"/>
                             <call-service service-name="createRequirement" in-map-name="inputMap">
-                                <result-to-field field="requirementId" result-name="requirementId"/>
+                                <result-to-field result-name="requirementId" field="requirementId"/>
                             </call-service>
                             <log level="info" message="Requirement creted with id [${requirementId}] for product with id [${productFacility.productId}]."/>
                         </if-compare-field>
@@ -507,7 +507,7 @@ under the License.
         </check-permission>
         <check-errors/>
 
-        <make-value value-field="newEntity" entity-name="OrderHeader"/>
+        <make-value entity-name="OrderHeader" value-field="newEntity"/>
         
         <if-not-empty field="parameters.orderId">
             <set field="newEntity.orderId" from-field="parameters.orderId"/>
@@ -545,7 +545,7 @@ under the License.
             </add-error>
         </if-empty>
         <check-errors/>
-        <set-nonpk-fields value-field="orderHeader" map="parameters" set-if-null="false"/>
+        <set-nonpk-fields map="parameters" value-field="orderHeader"/>
         <store-value value-field="orderHeader"/>
     </simple-method>
 
@@ -563,7 +563,7 @@ under the License.
                 </condition>
                 <then>
                     <clear-field field="cancelOrderItemInMap"/>
-                    <set-service-fields service-name="cancelOrderItemNoActions" to-map="cancelOrderItemInMap" map="parameters"/>
+                    <set-service-fields service-name="cancelOrderItemNoActions" map="parameters" to-map="cancelOrderItemInMap"/>
                     <set from-field="orderItem.orderItemSeqId" field="cancelOrderItemInMap.orderItemSeqId"/>
                     <call-service service-name="cancelOrderItemNoActions" in-map-name="cancelOrderItemInMap"/>
                 </then>
@@ -594,7 +594,7 @@ under the License.
         </iterate>
 
         <!-- Recalculate the promotions for the order -->
-        <set-service-fields service-name="loadCartFromOrder" to-map="loadCartFromOrderInMap" map="parameters"/>
+        <set-service-fields service-name="loadCartFromOrder" map="parameters" to-map="loadCartFromOrderInMap"/>
         <set value="true" field="loadCartFromOrderInMap.skipInventoryChecks" type="Boolean"/>
         <set value="true" field="loadCartFromOrderInMap.skipProductChecks" type="Boolean"/>
         <call-service service-name="loadCartFromOrder" in-map-name="loadCartFromOrderInMap">
@@ -606,7 +606,7 @@ under the License.
             <if-empty field="orderItemSeqId">
                 <!-- this is a new (promo) item -->
                 <!-- a new order item is created -->
-                <make-value value-field="newOrderItem" entity-name="OrderItem"/>
+                <make-value entity-name="OrderItem" value-field="newOrderItem"/>
                 <set field="newOrderItem.orderId" from-field="parameters.orderId"/>
                 <call-object-method obj-field="item" method-name="getItemType" ret-field="newOrderItem.orderItemTypeId"/>
                 <call-object-method obj-field="item" method-name="getSelectedAmount" ret-field="newOrderItem.selectedAmount"/>
@@ -679,13 +679,13 @@ under the License.
            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateOrderContactMech"/>
         </check-permission>
         <check-errors/>
-        <make-value value-field="orderContactMechMap" entity-name="OrderContactMech"/>
+        <make-value entity-name="OrderContactMech" value-field="orderContactMechMap"/>
         <set-pk-fields map="parameters" value-field="orderContactMechMap"/>
         <set from-field="parameters.orderId" field="inputMap.orderId"/>
         <set from-field="parameters.contactMechPurposeTypeId" field="inputMap.contactMechPurposeTypeId"/>
         <set from-field="parameters.contactMechId" field="inputMap.contactMechId"/>
-        <if-compare value="SHIPPING_LOCATION" field="parameters.contactMechPurposeTypeId" operator="equals">
-           <if-compare value="parameters.oldContactMechId" field="parameters.contactMechId" operator="not-equals">
+        <if-compare field="parameters.contactMechPurposeTypeId" operator="equals" value="SHIPPING_LOCATION">
+           <if-compare field="parameters.contactMechId" operator="not-equals" value="parameters.oldContactMechId">
            <set field="orderItemShipGroupMap.orderId" from-field="parameters.orderId"/>
            <set field="orderItemShipGroupMap.contactMechId" from-field="parameters.oldContactMechId"/>
            <find-by-and entity-name="OrderItemShipGroup" list="shipGroupList" map="orderItemShipGroupMap"/>
@@ -694,7 +694,7 @@ under the License.
                  <set field="inputMap.shipGroupSeqId" from-field="shipGroup.shipGroupSeqId"/>
                  <set field="inputMap.shipmentMethod" value="${shipGroup.shipmentMethodTypeId}@${shipGroup.carrierPartyId}@${shipGroup.carrierRoleTypeId}"/>
                  <set field="inputMap.oldContactMechId" from-field="parameters.oldContactMechId"/>
-                 <set-service-fields to-map="orderItemShipGroupMap" service-name="updateOrderItemShipGroup" map="inputMap"/>
+                 <set-service-fields service-name="updateOrderItemShipGroup" map="inputMap" to-map="orderItemShipGroupMap"/>
                  <call-service service-name="updateOrderItemShipGroup" in-map-name="orderItemShipGroupMap" include-user-login="true"/>
               </iterate>
            </if-not-empty>
@@ -722,7 +722,7 @@ under the License.
             <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateOrderItemShipGroup"/>
         </check-permission>
         <check-errors/>
-        <make-value value-field="lookupPKMap" entity-name="OrderItemShipGroup"/>
+        <make-value entity-name="OrderItemShipGroup" value-field="lookupPKMap"/>
         <set-pk-fields map="parameters" value-field="lookupPKMap"/>
         <find-by-primary-key entity-name="OrderItemShipGroup" map="lookupPKMap" value-field="lookedUpValue"/>
         <!-- splitting shipmentMethod request parameter value that contains "@" symbol
@@ -772,17 +772,8 @@ under the License.
         </else>
         </if-compare>
         <get-related value-field="orderItemShipGroup" relation-name="OrderItemShipGrpInvRes" list="orderItemShipGroupInvResList" order-by-list="orderByList"/>
-        <first-from-list entry="orderItemShipGroupInvRes" list="orderItemShipGroupInvResList"/>
+        <first-from-list list="orderItemShipGroupInvResList" entry="orderItemShipGroupInvRes"/>
         <field-to-result field="orderItemShipGroupInvRes.promisedDatetime" result-name="estimatedShipDate"/>
-    </simple-method>
-
-    <simple-method method-name="removeOrderContactMech" short-description="Remove OrderContactMech">
-        <check-permission permission="ORDERMGR" action="_DELETE">
-            <fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunRemoveOrderContactMech"/>
-        </check-permission>
-        <check-errors/>
-        <entity-one entity-name="OrderContactMech" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
     </simple-method>
 
     <simple-method method-name="updateOrderNote" short-description="Update OrderNote">
@@ -791,7 +782,7 @@ under the License.
         </check-permission>
         <check-errors/>
         <entity-one entity-name="OrderHeaderNote" value-field="orderHeaderNote"/>
-        <set-nonpk-fields value-field="orderHeaderNote" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="orderHeaderNote"/>
         <store-value value-field="orderHeaderNote"/>
     </simple-method>
 
@@ -809,7 +800,7 @@ under the License.
         <set field="inputMap.paymentMethodTypeId" from-field="paymentMethod.paymentMethodTypeId"/>
         <!--In this method we calls createOrderPaymentPreference and returns orderPaymentPreferenceId field to authOrderPaymentPreference -->
         <call-service service-name="createOrderPaymentPreference" in-map-name="inputMap" include-user-login="true">
-           <result-to-field field="parameters.orderPaymentPreferenceId" result-name="orderPaymentPreferenceId"/>
+           <result-to-field result-name="orderPaymentPreferenceId" field="parameters.orderPaymentPreferenceId"/>
         </call-service>
         <field-to-result field="parameters.orderPaymentPreferenceId" result-name="orderPaymentPreferenceId"/>
     </simple-method>
@@ -844,7 +835,7 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createOrderItemChange" short-description="Creates a new Order Item Change record">
-        <make-value value-field="newEntity" entity-name="OrderItemChange"/>
+        <make-value entity-name="OrderItemChange" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="parameters.changeDatetime">
             <now-timestamp field="nowTimestamp"/>
@@ -980,7 +971,7 @@ under the License.
                         <field-map field-name="partyId" from-field="partyId"/>
                         <field-map field-name="contactMechPurposeTypeId" value="BILLING_LOCATION"/>
                     </entity-and>
-                    <first-from-list entry="pcmp" list="pcmpList"/>
+                    <first-from-list list="pcmpList" entry="pcmp"/>
                     <if-not-empty field="pcmp">
                         <set-service-fields service-name="deletePartyContactMechPurposeIfExists" map="pcmp" to-map="serviceInMap"/>
                         <call-service service-name="deletePartyContactMechPurposeIfExists" in-map-name="serviceInMap"/>
@@ -1032,7 +1023,7 @@ under the License.
                     <if-compare field="keepAddressBook" operator="equals" value="Y">
                         <make-value entity-name="PostalAddress" value-field="newValue"/>
                         <set-pk-fields value-field="newValue" map="billToAddressCtx"/>
-                        <set-nonpk-fields value-field="newValue" map="billToAddressCtx"/>
+                        <set-nonpk-fields map="billToAddressCtx" value-field="newValue"/>
                         <entity-one entity-name="PostalAddress" value-field="oldValue" auto-field-map="false">
                             <field-map field-name="contactMechId" from-field="billToAddressCtx.contactMechId"/>
                         </entity-one>
@@ -1128,11 +1119,11 @@ under the License.
                 </entity-and>
                 <first-from-list list="orderSuppliers" entry="orderSupplier"/>
                 <entity-and list="supplierProducts" entity-name="SupplierProduct">
-                    <field-map from-field="parameters.productId" field-name="productId"/>
-                    <field-map from-field="orderSupplier.partyId" field-name="partyId"/>
-                    <field-map from-field="nullField" field-name="availableThruDate"/>
+                    <field-map field-name="productId" from-field="parameters.productId"/>
+                    <field-map field-name="partyId" from-field="orderSupplier.partyId"/>
+                    <field-map field-name="availableThruDate" from-field="nullField"/>
                 </entity-and>
-                <iterate entry="supplierProduct" list="supplierProducts">
+                <iterate list="supplierProducts" entry="supplierProduct">
                     <now-timestamp field="nowTimestamp"/>
                     <if-not-empty field="parameters.orderCurrencyUnitPrice">
                         <if-compare-field field="parameters.orderCurrencyUnitPrice" operator="not-equals" to-field="supplierProduct.lastPrice" type="BigDecimal">
@@ -1168,7 +1159,7 @@ under the License.
                         <entity-and entity-name="OrderItem" list="orderItems">
                             <field-map field-name="orderId" from-field="parameters.orderId"/>
                         </entity-and>
-                        <iterate entry="orderItem" list="orderItems">
+                        <iterate list="orderItems" entry="orderItem">
                             <iterate-map key="orderItemSeqId" value="unitPrice" map="parameters.itemPriceMap">
                                 <if>
                                     <condition>
@@ -1183,18 +1174,18 @@ under the License.
                                                 <then>
                                                     <set field="orderItem.unitPrice" from-field="unitPrice" type="BigDecimal"/>
                                                     <entity-and list="supplierProducts" entity-name="SupplierProduct">
-                                                        <field-map from-field="orderItem.productId" field-name="productId"/>
-                                                        <field-map from-field="parameters.supplierPartyId" field-name="partyId"/>
-                                                        <field-map from-field="nullField" field-name="availableThruDate"/>
+                                                        <field-map field-name="productId" from-field="orderItem.productId"/>
+                                                        <field-map field-name="partyId" from-field="parameters.supplierPartyId"/>
+                                                        <field-map field-name="availableThruDate" from-field="nullField"/>
                                                     </entity-and>
-                                                    <iterate entry="supplierProduct" list="supplierProducts">
+                                                    <iterate list="supplierProducts" entry="supplierProduct">
                                                         <now-timestamp field="nowTimestamp"/>
                                                         <if>
                                                             <condition>
                                                                 <if-compare-field field="orderItem.unitPrice" to-field="supplierProduct.lastPrice" operator="not-equals" type="BigDecimal"/>
                                                             </condition>
                                                             <then>
-                                                                <make-value value-field="newSupplierProduct" entity-name="SupplierProduct"/>
+                                                                <make-value entity-name="SupplierProduct" value-field="newSupplierProduct"/>
                                                                 <clone-value value-field="supplierProduct" new-value-field="newSupplierProduct"/>
                                                                 <set from-field="nowTimestamp" field="newSupplierProduct.availableFromDate"/>
                                                                 <set from-field="orderItem.unitPrice" field="newSupplierProduct.lastPrice"/>
@@ -1215,9 +1206,9 @@ under the License.
                     <else>
                         <iterate entry="orderItem" list="parameters.orderItems">
                             <entity-and list="supplierProducts" entity-name="SupplierProduct">
-                                <field-map from-field="orderItem.productId" field-name="productId"/>
-                                <field-map from-field="parameters.supplierPartyId" field-name="partyId"/>
-                                <field-map from-field="nullField" field-name="availableThruDate"/>
+                                <field-map field-name="productId" from-field="orderItem.productId"/>
+                                <field-map field-name="partyId" from-field="parameters.supplierPartyId"/>
+                                <field-map field-name="availableThruDate" from-field="nullField"/>
                             </entity-and>
                             <iterate entry="supplierProduct" list="supplierProducts">
                                 <now-timestamp field="nowTimestamp"/>
@@ -1226,7 +1217,7 @@ under the License.
                                         <if-compare-field field="orderItem.unitPrice" to-field="supplierProduct.lastPrice" operator="not-equals" type="BigDecimal"/>
                                     </condition>
                                     <then>
-                                        <make-value value-field="newSupplierProduct" entity-name="SupplierProduct"/>
+                                        <make-value entity-name="SupplierProduct" value-field="newSupplierProduct"/>
                                         <clone-value value-field="supplierProduct" new-value-field="newSupplierProduct"/>
                                         <set from-field="nowTimestamp" field="newSupplierProduct.availableFromDate"/>
                                         <set from-field="orderItem.unitPrice" field="newSupplierProduct.lastPrice" type="BigDecimal"/>
@@ -1245,18 +1236,18 @@ under the License.
 
     <simple-method method-name="cancelAllBackOrders" short-description="Cancels those back orders from suppliers whose cancel back order date (cancelBackOrderDate) has passed the current date">
         <now-timestamp field="nowTimestamp"/>
-        <entity-condition list="orders" entity-name="OrderHeader">
+        <entity-condition entity-name="OrderHeader" list="orders">
             <condition-list combine="and">
                 <condition-expr field-name="orderTypeId" operator="equals" value="PURCHASE_ORDER"/>
                 <condition-expr field-name="statusId" operator="not-equals" value="ORDER_CANCELLED"/>
                 <condition-expr field-name="statusId" operator="not-equals" value="ORDER_COMPLETED"/>
             </condition-list>
         </entity-condition>
-        <iterate entry="currentOrder" list="orders">
+        <iterate list="orders" entry="currentOrder">
             <entity-and list="orderItems" entity-name="OrderItem">
                 <field-map field-name="orderId" from-field="currentOrder.orderId"/>
             </entity-and>
-            <iterate entry="currentOrderItem" list="orderItems">
+            <iterate list="orderItems" entry="currentOrderItem">
                 <set field="backOrderDate" from-field="currentOrderItem.cancelBackOrderDate" type="Timestamp"/>
                 <if>
                     <condition>
@@ -1301,26 +1292,26 @@ under the License.
         </else>
         </if-compare-field>
         <if-compare-field field="diffPercentage" operator="greater" to-field="percentAllowed" type="BigDecimal">
-            <set-service-fields map="parameters" to-map="updateOrderItemShipGroupContext" service-name="updateOrderItemShipGroup"/>
+            <set-service-fields service-name="updateOrderItemShipGroup" map="parameters" to-map="updateOrderItemShipGroupContext"/>
             <call-service service-name="updateOrderItemShipGroup" in-map-name="updateOrderItemShipGroupContext"/>
-            <set-service-fields map="parameters" to-map="updateOrderAdjustmentContext" service-name="updateOrderAdjustment"/>
+            <set-service-fields service-name="updateOrderAdjustment" map="parameters" to-map="updateOrderAdjustmentContext"/>
             <call-service service-name="updateOrderAdjustment" in-map-name="updateOrderAdjustmentContext"/>
-            <set-service-fields map="parameters" to-map="updateShipmentRouteSegmentContext" service-name="updateShipmentRouteSegment"/>
+            <set-service-fields service-name="updateShipmentRouteSegment" map="parameters" to-map="updateShipmentRouteSegmentContext"/>
             <clear-field field="updateShipmentRouteSegmentContext.trackingIdNumber"/>
             <clear-field field="updateShipmentRouteSegmentContext.trackingDigest"/>
             <clear-field field="updateShipmentRouteSegmentContext.carrierServiceStatusId"/>
             <call-service service-name="updateShipmentRouteSegment" in-map-name="updateShipmentRouteSegmentContext"/>
-            <set-service-fields map="parameters" to-map="upsShipmentConfirmContext" service-name="upsShipmentConfirm"/>
+            <set-service-fields service-name="upsShipmentConfirm" map="parameters" to-map="upsShipmentConfirmContext"/>
             <call-service service-name="upsShipmentConfirm" in-map-name="upsShipmentConfirmContext"/>
         <else>
-            <set-service-fields map="parameters" to-map="updateOrderItemShipGroupContext" service-name="updateOrderItemShipGroup"/>
+            <set-service-fields service-name="updateOrderItemShipGroup" map="parameters" to-map="updateOrderItemShipGroupContext"/>
             <call-service service-name="updateOrderItemShipGroup" in-map-name="updateOrderItemShipGroupContext"/>
-            <set-service-fields map="parameters" to-map="updateShipmentRouteSegmentContext" service-name="updateShipmentRouteSegment"/>
+            <set-service-fields service-name="updateShipmentRouteSegment" map="parameters" to-map="updateShipmentRouteSegmentContext"/>
             <clear-field field="updateShipmentRouteSegmentContext.trackingIdNumber"/>
             <clear-field field="updateShipmentRouteSegmentContext.trackingDigest"/>
             <clear-field field="updateShipmentRouteSegmentContext.carrierServiceStatusId"/>
             <call-service service-name="updateShipmentRouteSegment" in-map-name="updateShipmentRouteSegmentContext"/>
-            <set-service-fields map="parameters" to-map="upsShipmentConfirmContext" service-name="upsShipmentConfirm"/>
+            <set-service-fields service-name="upsShipmentConfirm" map="parameters" to-map="upsShipmentConfirmContext"/>
             <call-service service-name="upsShipmentConfirm" in-map-name="upsShipmentConfirmContext"/>
         </else>
         </if-compare-field>
@@ -1329,7 +1320,7 @@ under the License.
     <simple-method method-name="productAvailabalityByFacility" short-description="Calculate ATP and Qoh According For each facility">
         <set field="facilityMap.ownerPartyId" from-field="parameters.ownerPartyId"/>
         <find-by-and map="facilityMap" list="facilityList" entity-name="Facility"/>
-        <iterate entry="facility" list="facilityList">
+        <iterate list="facilityList" entry="facility">
             <set field="getInventoryAvailableByFacilityMap.facilityId" from-field="facility.facilityId"/>
             <set field="getInventoryAvailableByFacilityMap.productId" from-field="parameters.productId"/>
             <call-service service-name="getInventoryAvailableByFacility" in-map-name="getInventoryAvailableByFacilityMap">
@@ -1346,13 +1337,13 @@ under the License.
     </simple-method>
 
     <simple-method method-name="createOrderPaymentApplication" short-description="Create Order Payment Application">
-        <entity-one value-field="paymentMap" entity-name="Payment"/>
+        <entity-one entity-name="Payment" value-field="paymentMap"/>
         <set field="createCtx.amountApplied" from-field="paymentMap.amount" type="BigDecimal"/>
         <set field="createCtx.paymentId" from-field="paymentMap.paymentId"/>
-        <entity-one value-field="orderPaymentPreMap" entity-name="OrderPaymentPreference">
+        <entity-one entity-name="OrderPaymentPreference" value-field="orderPaymentPreMap">
             <field-map field-name="orderPaymentPreferenceId" from-field="paymentMap.paymentPreferenceId"/>
         </entity-one>
-        <entity-and list="orderItemBilList" entity-name="OrderItemBilling">
+        <entity-and entity-name="OrderItemBilling" list="orderItemBilList">
             <field-map field-name="orderId" from-field="orderPaymentPreMap.orderId"/>
             <order-by field-name="invoiceId"/>
         </entity-and>

@@ -147,7 +147,7 @@ public class ProductEvents {
         } catch (GenericEntityException e) {
             try {
                 TransactionUtil.rollback(beganTx, e.getMessage(), e);
-            } catch (Exception e1) {
+            } catch (GenericTransactionException e1) {
                 Debug.logError(e1, module);
             }
             return "error";
@@ -156,7 +156,7 @@ public class ProductEvents {
             request.setAttribute("_ERROR_MESSAGE_", t.getMessage());
             try {
                 TransactionUtil.rollback(beganTx, t.getMessage(), t);
-            } catch (Exception e2) {
+            } catch (GenericTransactionException e2) {
                 Debug.logError(e2, module);
             }
             return "error";
@@ -172,7 +172,7 @@ public class ProductEvents {
             // commit the transaction
             try {
                 TransactionUtil.commit(beganTx);
-            } catch (Exception e) {
+            } catch (GenericTransactionException e) {
                 Debug.logError(e, module);
             }
         }
@@ -248,14 +248,14 @@ public class ProductEvents {
                 errMsgList.add("From Date not formatted correctly.");
             }
         }
-        if (!UtilValidate.isNotEmpty(productId))
+        if (UtilValidate.isEmpty(productId))
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_ID_missing", UtilHttp.getLocale(request)));
-        if (!UtilValidate.isNotEmpty(productIdTo))
+        if (UtilValidate.isEmpty(productIdTo))
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.product_ID_To_missing", UtilHttp.getLocale(request)));
-        if (!UtilValidate.isNotEmpty(productAssocTypeId))
+        if (UtilValidate.isEmpty(productAssocTypeId))
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.association_type_ID_missing", UtilHttp.getLocale(request)));
         // from date is only required if update mode is not CREATE
-        if (!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr))
+        if (!updateMode.equals("CREATE") && UtilValidate.isEmpty(fromDateStr))
             errMsgList.add(UtilProperties.getMessage(resource,"productevents.from_date_missing", UtilHttp.getLocale(request)));
         if (errMsgList.size() > 0) {
             request.setAttribute("_ERROR_MESSAGE_LIST_", errMsgList);

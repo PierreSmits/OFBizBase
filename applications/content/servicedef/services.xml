@@ -86,15 +86,13 @@
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateDataCategory" engine="simple" default-entity-name="DataCategory" auth="true"
-            location="component://content/minilang/data/DataServices.xml" invoke="updateDataCategory">
+    <service name="updateDataCategory" engine="entity-auto" default-entity-name="DataCategory" auth="true" invoke="update">
         <description>Update a DataCategory</description>
         <permission-service service-name="contentManagerPermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeDataCategory" engine="simple" default-entity-name="DataCategory" auth="true"
-            location="component://content/minilang/data/DataServices.xml" invoke="removeDataCategory">
+    <service name="removeDataCategory" engine="entity-auto" default-entity-name="DataCategory" auth="true" invoke="delete">
         <description>Remove DataCategory</description>
         <permission-service service-name="contentManagerPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -120,29 +118,30 @@
     </service>
 
     <!-- DataResourceRole services -->
-    <service name="createDataResourceRole" engine="simple" default-entity-name="DataResourceRole" auth="true"
-            location="component://content/minilang/data/DataServices.xml" invoke="createDataResourceRole">
+    <service name="createDataResourceRole" engine="entity-auto" default-entity-name="DataResourceRole" auth="true" invoke="create">
         <description>Create a DataResourceRole</description>
-        <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
-        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <permission-service service-name="genericDataResourcePermission" main-action="CREATE"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="dataResourceId" mode="IN" type="String"/>
+        <attribute name="partyId" mode="IN" type="String"/>
+        <attribute name="roleTypeId" mode="IN" type="String"/>
+        <attribute name="fromDate" mode="INOUT" type="Timestamp" optional="true"/>
     </service>
-    <service name="updateDataResourceRole" engine="simple" default-entity-name="DataResourceRole" auth="true"
-            location="component://content/minilang/data/DataServices.xml" invoke="updateDataResourceRole">
+    <service name="updateDataResourceRole" engine="entity-auto" default-entity-name="DataResourceRole" auth="true" invoke="update">
         <description>Update a DataResourceRole</description>
         <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeDataResourceRole" engine="simple" default-entity-name="DataResourceRole" auth="true"
-            location="component://content/minilang/data/DataServices.xml" invoke="removeDataResourceRole">
+    <service name="removeDataResourceRole" engine="entity-auto" default-entity-name="DataResourceRole" auth="true" invoke="delete">
         <description>Remove DataResourceRole</description>
-        <permission-service service-name="genericDataResourcePermission" main-action="UPDATE"/>
+        <permission-service service-name="genericDataResourcePermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Generic Content Services -->
     <service name="createEmailContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="createEmailContent">
+        <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="subject" type="String" mode="IN" optional="false"/>
         <attribute name="plainBody" type="String" mode="IN" optional="false"/>
@@ -150,6 +149,7 @@
         <override name="contentId" mode="INOUT"/>
     </service>
     <service name="updateEmailContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="updateEmailContent">
+        <permission-service service-name="contentManagerPermission" main-action="UPDATE"/>
         <attribute name="subjectDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="subject" type="String" mode="IN" optional="true"/>
         <attribute name="plainBodyDataResourceId" type="String" mode="IN" optional="true"/>
@@ -159,21 +159,25 @@
     </service>
 
     <service name="createDownloadContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="createDownloadContent">
+        <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="file" type="String" mode="IN" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
     <service name="updateDownloadContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="updateDownloadContent">
+        <permission-service service-name="contentManagerPermission" main-action="UPDATE"/>
         <attribute name="fileDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="file" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createSimpleTextContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="createSimpleTextContent">
+        <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
         <override name="contentId" mode="INOUT"/>
     </service>
     <service name="updateSimpleTextContent" engine="simple" location="component://content/minilang/content/ContentServices.xml" invoke="updateSimpleTextContent">
+        <permission-service service-name="contentManagerPermission" main-action="UPDATE"/>
         <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
         <attribute name="text" type="String" mode="IN" optional="true" allow-html="any"/>
     </service>
@@ -699,6 +703,7 @@
         location="component://content/minilang/compdoc/CompDocServices.xml"
         invoke="prepForApproval" auth="true">
         <description>Set ContentApprovals for approval process</description>
+        <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
         <attribute name="rootContentId" type="String" mode="IN" optional="false"/>
         <attribute name="rootContentRevisionSeqId" type="String" mode="OUT" optional="false"/>
     </service>
@@ -910,5 +915,20 @@
         <description>Create Content Alternative URL</description>
         <attribute name="contentId" mode="IN" type="String" optional="true"></attribute>
         <attribute name="contentCreated" mode="OUT" type="String" optional="true"></attribute>
+    </service>
+
+    <service name="createWebPreferenceType" engine="entity-auto" default-entity-name="WebPreferenceType" auth="true" invoke="create">
+        <description>Create WebPreferenceType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateWebPreferenceType" engine="entity-auto" default-entity-name="WebPreferenceType" auth="true" invoke="update">
+        <description>Update WebPreferenceType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteWebPreferenceType" engine="entity-auto" default-entity-name="WebPreferenceType" auth="true" invoke="delete">
+        <description>Delete ContentApproval record</description>
+        <auto-attributes include="pk" mode="IN"/>
     </service>
 </services>

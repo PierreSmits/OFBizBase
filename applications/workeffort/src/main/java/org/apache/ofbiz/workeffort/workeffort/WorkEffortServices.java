@@ -355,7 +355,7 @@ public class WorkEffortServices {
 
     private static TreeMap<DateRange, List<Map<String, Object>>> groupCalendarEntriesByDateRange(DateRange inDateRange, List<Map<String, Object>> calendarEntries) {
         TreeMap<DateRange, List<Map<String, Object>>> calendarEntriesByDateRange = new TreeMap<DateRange, List<Map<String, Object>>>();
-        TreeSet<Date> dateBoundaries = new TreeSet<Date>();
+        Set<Date> dateBoundaries = new TreeSet<Date>();
         if (inDateRange != null) {
             dateBoundaries.add(inDateRange.start());
             dateBoundaries.add(inDateRange.end());
@@ -1039,7 +1039,7 @@ public class WorkEffortServices {
                 Map<String, Object> emailCtx = UtilMisc.toMap("emailTemplateSettingId", "WEFF_EVENT_REMINDER", "sendTo", toAddress, "bodyParameters", parameters);
                 try {
                     dispatcher.runAsync("sendMailFromTemplateSetting", emailCtx);
-                } catch (Exception e) {
+                } catch (GenericServiceException e) {
                     Debug.logWarning("Error while emailing event reminder - workEffortId = " + reminder.get("workEffortId") + ", contactMechId = " + reminder.get("contactMechId") + ": " + e, module);
                 }
             } else {

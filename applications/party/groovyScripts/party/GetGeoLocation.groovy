@@ -17,22 +17,17 @@
  * under the License.
  */
 
-import org.apache.ofbiz.entity.*;
-import org.apache.ofbiz.entity.util.EntityUtil;
-import org.apache.ofbiz.base.util.*;
-import org.apache.ofbiz.base.util.string.*;
-import org.apache.ofbiz.party.contact.ContactHelper;
-import org.apache.ofbiz.common.geo.*;
+import org.apache.ofbiz.common.geo.GeoWorker
 
 if (partyId) {
-    context.partyId = partyId;
-    latestGeoPoint = GeoWorker.findLatestGeoPoint(delegator, "PartyAndGeoPoint", "partyId", partyId, null, null);
+    context.partyId = partyId
+    latestGeoPoint = GeoWorker.findLatestGeoPoint(delegator, "PartyAndGeoPoint", "partyId", partyId, null, null)
     if (latestGeoPoint) {
-        context.geoPointId = latestGeoPoint.geoPointId;
-        context.latitude = latestGeoPoint.latitude;
-        context.longitude = latestGeoPoint.longitude;
+        context.geoPointId = latestGeoPoint.geoPointId
+        context.latitude = latestGeoPoint.latitude
+        context.longitude = latestGeoPoint.longitude
     } else {
-        context.latitude = 0;
-        context.longitude = 0;
+        context.latitude = 0
+        context.longitude = 0
     }
 }

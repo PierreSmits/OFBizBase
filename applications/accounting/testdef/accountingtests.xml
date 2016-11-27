@@ -37,4 +37,25 @@
     <test-case case-name="auto-accounting-transaction-tests-purchase">
         <simple-method-test location="component://accounting/minilang/test/AutoAcctgTransTestsPurchase.xml"/>
     </test-case>
+    <test-case case-name="auto-accounting-admin-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgAdminTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-agreement-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgAgreementTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-budget-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgBudgetTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-cost-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgCostTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-finaccount-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgFinAccountTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-fixedasset-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgFixedAssetTests.xml"/>
+    </test-case>
+    <test-case case-name="auto-accounting-invoice-tests">
+        <simple-method-test location="component://accounting/minilang/test/AutoAcctgInvoiceTests.xml"/>
+    </test-case>
 </test-suite>

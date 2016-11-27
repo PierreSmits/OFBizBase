@@ -317,9 +317,9 @@ public class EntitySyncServices {
                     // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
 
                     // anything to store locally?
-                    if (startDate != null && (!UtilValidate.isEmpty(result.get("valuesToCreate")) ||
-                            !UtilValidate.isEmpty(result.get("valuesToStore")) ||
-                            !UtilValidate.isEmpty(result.get("keysToRemove")))) {
+                    if (startDate != null && (UtilValidate.isNotEmpty(result.get("valuesToCreate")) ||
+                            UtilValidate.isNotEmpty(result.get("valuesToStore")) ||
+                            UtilValidate.isNotEmpty(result.get("keysToRemove")))) {
 
                         // yep, we got more data
                         gotMoreData = true;
@@ -571,6 +571,8 @@ public class EntitySyncServices {
                         }
 
                         // TODO create a response document to send back to the initial sync machine
+                    } catch (GenericServiceException gse) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtUnableToLoadXMLDocument", UtilMisc.toMap("entitySyncId", entitySyncId, "startTime", startTime, "errorString", gse.getMessage()), locale));
                     } catch (Exception e) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtUnableToLoadXMLDocument", UtilMisc.toMap("entitySyncId", entitySyncId, "startTime", startTime, "errorString", e.getMessage()), locale));
                     }

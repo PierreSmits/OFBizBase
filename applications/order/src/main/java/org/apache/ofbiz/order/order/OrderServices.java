@@ -123,7 +123,7 @@ public class OrderServices {
         if (UtilValidate.isEmpty(orderParty)) {
             orderParty = orh.getPlacingParty();
         }
-        if (UtilValidate.isNotEmpty(orderParty)) {
+        if (orderParty != null) {
             partyId = orderParty.getString("partyId");
         }
         boolean hasPermission = hasPermission(orderTypeId, partyId, userLogin, action, security);
@@ -829,7 +829,7 @@ public class OrderServices {
                     if (valueObj.get("carrierRoleTypeId") == null) {
                         valueObj.set("carrierRoleTypeId", "CARRIER");
                     }
-                    if (!UtilValidate.isEmpty(valueObj.getString("supplierPartyId"))) {
+                    if (UtilValidate.isNotEmpty(valueObj.getString("supplierPartyId"))) {
                         dropShipGroupIds.add(valueObj.getString("shipGroupSeqId"));
                     }
                 } else if ("OrderAdjustment".equals(valueObj.getEntityName())) {
@@ -2683,6 +2683,10 @@ public class OrderServices {
         Map<String, Object> sendResp = null;
         try {
             sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
+                    "OrderServiceExceptionSeeLogs",locale));
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, 
@@ -3060,7 +3064,7 @@ public class OrderServices {
                 }
             } else {
                 // check for auto-cancel items
-                ArrayList<EntityCondition> itemsExprs = new ArrayList<EntityCondition>();
+                List<EntityCondition> itemsExprs = new ArrayList<EntityCondition>();
 
                 // create the query expressions
                 itemsExprs.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -4302,7 +4306,7 @@ public class OrderServices {
                 if (valueObj.get("carrierRoleTypeId") == null) {
                     valueObj.set("carrierRoleTypeId", "CARRIER");
                 }
-                if (!UtilValidate.isEmpty(valueObj.get("supplierPartyId"))) {
+                if (UtilValidate.isNotEmpty(valueObj.get("supplierPartyId"))) {
                     dropShipGroupIds.add(valueObj.getString("shipGroupSeqId"));
                 }
             } else if ("OrderAdjustment".equals(valueObj.getEntityName())) {
@@ -4344,7 +4348,7 @@ public class OrderServices {
                     Debug.logError(e, module);
                     throw new GeneralException(e.getMessage());
                 }
-                if (UtilValidate.isNotEmpty(oldOrderItem)) {
+                if (oldOrderItem != null) {
 
                     //  Existing order item found. Check for modifications and store if any
                     String oldItemDescription = oldOrderItem.getString("itemDescription") != null ? oldOrderItem.getString("itemDescription") : "";
@@ -4957,7 +4961,7 @@ public class OrderServices {
             if ("SALES_ORDER".equals(orh.getOrderTypeId())) {
                 // get the order's ship groups
                 for (GenericValue shipGroup : orh.getOrderItemShipGroups()) {
-                    if (!UtilValidate.isEmpty(shipGroup.getString("supplierPartyId"))) {
+                    if (UtilValidate.isNotEmpty(shipGroup.getString("supplierPartyId"))) {
                         // This ship group is a drop shipment: we create a purchase order for it
                         String supplierPartyId = shipGroup.getString("supplierPartyId");
                         // Set supplier preferred currency for drop-ship (PO) order to support multi currency
@@ -4975,7 +4979,7 @@ public class OrderServices {
                         cart.setOrderPartyId(supplierPartyId);
                         // Get the items associated to it and create po
                         List<GenericValue> items = orh.getValidOrderItems(shipGroup.getString("shipGroupSeqId"));
-                        if (!UtilValidate.isEmpty(items)) {
+                        if (UtilValidate.isNotEmpty(items)) {
                             for (GenericValue item : items) {
                                 try {
                                     int itemIndex = cart.addOrIncreaseItem(item.getString("productId"),
@@ -5001,7 +5005,7 @@ public class OrderServices {
                         }
 
                         // If there are indeed items to drop ship, then create the purchase order
-                        if (!UtilValidate.isEmpty(cart.items())) {
+                        if (UtilValidate.isNotEmpty(cart.items())) {
                             // set checkout options
                             cart.setDefaultCheckoutOptions(dispatcher);
                             // the shipping address is the one of the customer
@@ -5792,14 +5796,14 @@ public class OrderServices {
             String orderId= (String) context.get("orderId");
             GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
             String shipGroupSeqId= (String) context.get("shipGroupSeqId");
-            if (UtilValidate.isNotEmpty(orderHeader) && UtilValidate.isNotEmpty(shipGroupSeqId)) {
+            if (orderHeader != null && UtilValidate.isNotEmpty(shipGroupSeqId)) {
                 orderItemShipGroup = EntityQuery.use(delegator).from("OrderItemShipGroup").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryOne();
                 if (UtilValidate.isEmpty(orderItemShipGroup)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderItemShipGroupDoesNotExist", locale));
                 }
             }
         }
-        if (UtilValidate.isNotEmpty(orderItemShipGroup)) {
+        if (orderItemShipGroup != null) {
             orderItemShipGroup.remove();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
@@ -5844,7 +5848,7 @@ public class OrderServices {
                     if (UtilValidate.isNotEmpty(oisgas)) {
                         GenericValue oisga = EntityUtil.getFirst(oisgas);
                         GenericValue oisg = oisga.getRelatedOne("OrderItemShipGroup", false);
-                        if (UtilValidate.isNotEmpty(oisg)) {
+                        if (oisg != null) {
                             addOrderItemShipGroupMap.put("shipmentMethodTypeId", oisg.get("shipmentMethodTypeId"));
                             addOrderItemShipGroupMap.put("carrierPartyId", oisg.get("carrierPartyId"));
                             addOrderItemShipGroupMap.put("carrierRoleTypeId", oisg.get("carrierRoleTypeId"));
@@ -5875,7 +5879,7 @@ public class OrderServices {
             }
             //test if this association already exist if yes display error
             GenericValue oisgAssoc = EntityQuery.use(delegator).from("OrderItemShipGroupAssoc").where("orderId", orderId, "orderItemSeqId", orderItem.get("orderItemSeqId"), "shipGroupSeqId", shipGroupSeqId).queryOne();
-            if (UtilValidate.isNotEmpty(oisgAssoc)) {
+            if (oisgAssoc != null) {
                 String errMsg = mainErrorMessage + UtilProperties.getMessage(resource_error, "OrderErrorOrderItemAlreadyRelatedToShipGroup", locale);
                 return ServiceUtil.returnError(errMsg);
             }
@@ -5975,7 +5979,7 @@ public class OrderServices {
                         try {
                             message = validateOrderItemShipGroupAssoc(delegator, dispatcher, orderItem, totalQuantity, oisga, userLogin, locale);
                         }
-                        catch (Exception e) {
+                        catch (GeneralException e) {
                             String errMsg = mainErrorMessage + UtilProperties.getMessage(resource_error, "OrderQuantityAssociatedIsLessThanOrderItemQuantity", locale);
                             Debug.logError(errMsg, module);
                             return ServiceUtil.returnError(errMsg);
@@ -6016,7 +6020,7 @@ public class OrderServices {
             oisga.store();
             // reserve the inventory
             GenericValue orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
-            if (UtilValidate.isNotEmpty(orderHeader)) {
+            if (orderHeader != null) {
                 Map<String, Object> cancelResp = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId, "orderItemSeqId", orderItemSeqId, "shipGroupSeqId", shipGroupSeqId ));
                 if (ServiceUtil.isError(cancelResp)) {
                     throw new GeneralException(ServiceUtil.getErrorMessage(cancelResp));
@@ -6241,7 +6245,7 @@ public class OrderServices {
         // In order to improve efficiency a little bit, we will always create the ProductAssoc records
         // with productId < productIdTo when the two are compared.  This way when checking for an existing
         // record we don't have to check both possible combinations of productIds
-        TreeSet<String> productIdSet = new TreeSet<String>();
+        Set<String> productIdSet = new TreeSet<String>();
         if (orderItems != null) {
             for (GenericValue orderItem : orderItems) {
                 String productId = orderItem.getString("productId");
@@ -6252,7 +6256,7 @@ public class OrderServices {
                 }
             }
         }
-        TreeSet<String> productIdToSet = new TreeSet<String>(productIdSet);
+        Set<String> productIdToSet = new TreeSet<String>(productIdSet);
         for (String productId : productIdSet) {
             productIdToSet.remove(productId);
             for (String productIdTo : productIdToSet) {

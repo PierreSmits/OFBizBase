@@ -25,17 +25,17 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="partyId" title="${uiLabelMap.AccountingCompanies}"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>
         <field name="setup" title=" " use-when="hasPrefPermission" widget-style="buttontext">
-            <hyperlink target="AdminMain" description="${uiLabelMap.AccountingSetup}">
+            <hyperlink description="${uiLabelMap.AccountingSetup}" target="AdminMain">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
         <field name="accounting" title=" " use-when="hasBasicPermission" widget-style="buttontext">
-            <hyperlink target="PartyAccountsSummary" description="${uiLabelMap.AccountingAccounting}">
+            <hyperlink description="${uiLabelMap.AccountingAccounting}" target="PartyAccountsSummary">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
         <field name="importexport" title=" " use-when="hasBasicPermission" widget-style="buttontext">
-            <hyperlink target="ImportExport" description="${uiLabelMap.CommonImportExport}">
+            <hyperlink description="${uiLabelMap.CommonImportExport}" target="ImportExport">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
@@ -50,7 +50,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${accountCode}" target="GlAccountNavigate">
+            <hyperlink description="${accountCode}" target="GlAccountNavigate" also-hidden="false">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
@@ -97,8 +97,8 @@ under the License.
             <entity-condition entity-name="InvoiceExport">
                 <condition-list combine="and">
                     <condition-list combine="or">
-                        <condition-expr field-name="partyIdFrom" from-field="organizationPartyId" operator="equals"/>
-                        <condition-expr field-name="partyId" from-field="organizationPartyId" operator="equals"/>
+                        <condition-expr field-name="partyIdFrom" operator="equals" from-field="organizationPartyId"/>
+                        <condition-expr field-name="partyId" operator="equals" from-field="organizationPartyId"/>
                     </condition-list>
                     <condition-expr field-name="invoiceDate" operator="greater-equals" from-field="parameters.startDate" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
@@ -163,18 +163,18 @@ under the License.
         <field name="fiscalYearStartMonth" use-when="partyAcctgPreference==null"
             tooltip="${groovy: import org.apache.ofbiz.base.util.UtilProperties; if(aggregatedPartyAcctgPreference!= null&amp;&amp;aggregatedPartyAcctgPreference.get('fiscalYearStartMonth')!=null)return (UtilProperties.getMessage('AccountingUiLabels', 'AccountingInheritedValue', locale))}">
             <drop-down>
-                <option key="1" description="${uiLabelMap.AccountingFiscalMonth01}"/>
-                <option key="2" description="${uiLabelMap.AccountingFiscalMonth02}"/>
-                <option key="3" description="${uiLabelMap.AccountingFiscalMonth03}"/>
-                <option key="4" description="${uiLabelMap.AccountingFiscalMonth04}"/>
-                <option key="5" description="${uiLabelMap.AccountingFiscalMonth05}"/>
-                <option key="6" description="${uiLabelMap.AccountingFiscalMonth06}"/>
-                <option key="7" description="${uiLabelMap.AccountingFiscalMonth07}"/>
-                <option key="8" description="${uiLabelMap.AccountingFiscalMonth08}"/>
-                <option key="9" description="${uiLabelMap.AccountingFiscalMonth09}"/>
-                <option key="10" description="${uiLabelMap.AccountingFiscalMonth10}"/>
-                <option key="11" description="${uiLabelMap.AccountingFiscalMonth11}"/>
-                <option key="12" description="${uiLabelMap.AccountingFiscalMonth12}"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth01}" description="1"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth02}" description="2"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth03}" description="3"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth04}" description="4"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth05}" description="5"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth06}" description="6"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth07}" description="7"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth08}" description="8"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth09}" description="9"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth10}" description="10"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth11}" description="11"/>
+                <option key="${uiLabelMap.AccountingFiscalMonth12}" description="12"/>
             </drop-down>
         </field>
         <field name="fiscalYearStartDay" use-when="partyAcctgPreference==null"
@@ -237,7 +237,7 @@ under the License.
             tooltip="${groovy: import org.apache.ofbiz.base.util.UtilProperties; if(aggregatedPartyAcctgPreference!= null&amp;&amp;aggregatedPartyAcctgPreference.get('useInvoiceIdForReturns')!=null)return
             (UtilProperties.getMessage('AccountingUiLabels', 'AccountingInheritedValue', locale))}">
             <drop-down allow-empty="true">
-                <option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/>
+                <option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/>
             </drop-down>
         </field>
         <field name="quoteIdPrefix" use-when="partyAcctgPreference==null"
@@ -483,14 +483,14 @@ under the License.
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
         <field name="defaultGlAccountId">
-            <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
+            <hyperlink description="${defaultGlAccountId}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
         </field>
         <field name="overrideGlAccountId"><display/></field>
         <field name="activeGlDescription"><display/></field>
         <field name="remove" title=" " widget-style="buttontext" use-when="defaultAccount==false">
-            <hyperlink target="removeSalInvoiceItemTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeSalInvoiceItemTypeGlAssignment">
                 <parameter param-name="organizationPartyId"/><parameter param-name="invoiceItemTypeId"/>
             </hyperlink>
         </field>
@@ -537,14 +537,14 @@ under the License.
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
         <field name="defaultGlAccountId">
-            <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
+            <hyperlink description="${defaultGlAccountId}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
         </field>
         <field name="overrideGlAccountId" title="${uiLabelMap.AccountingInvoiceOverrideExpenseGlAccountId}"><display/></field>
         <field name="activeGlDescription"><display/></field>
         <field name="remove" title=" " widget-style="buttontext" use-when="defaultAccount==false">
-            <hyperlink target="removePurInvoiceItemTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removePurInvoiceItemTypeGlAssignment">
                 <parameter param-name="organizationPartyId"/><parameter param-name="invoiceItemTypeId"/>
             </hyperlink>
         </field>
@@ -593,7 +593,7 @@ under the License.
         <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="remove" title=" " widget-style="buttontext">
-            <hyperlink target="removePaymentTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removePaymentTypeGlAssignment">
                 <parameter param-name="organizationPartyId"/><parameter param-name="paymentTypeId"/>
             </hyperlink>
         </field>
@@ -646,12 +646,12 @@ under the License.
         </field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="defaultGlAccountId">
-            <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId} : ${description}">
+            <hyperlink description="${defaultGlAccountId} : ${description}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
         </field>
         <field name="remove" title=" " widget-style="buttontext">
-            <hyperlink target="removePaymentMethodTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="removePaymentMethodTypeGlAssignment">
                 <parameter param-name="organizationPartyId"/><parameter param-name="paymentMethodTypeId"/>
             </hyperlink>
         </field>
@@ -705,7 +705,7 @@ under the License.
           <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="[${customTimePeriodId}] ${periodName}: ${fromDate} - ${thruDate}"/>
         </field>
         <field name="close" title=" " widget-style="buttontext">
-            <hyperlink target="closeFinancialTimePeriod" description="${uiLabelMap.CommonClose}">
+            <hyperlink description="${uiLabelMap.CommonClose}" target="closeFinancialTimePeriod">
                 <parameter param-name="organizationPartyId"/><parameter param-name="customTimePeriodId"/>
             </hyperlink>
         </field>
@@ -716,8 +716,8 @@ under the License.
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="isClosed">
             <drop-down>
-                <option description="${uiLabelMap.CommonNo}" key="N"/>
-                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+                <option key="${uiLabelMap.CommonNo}" description="N"/>
+                <option key="${uiLabelMap.CommonYes}" description="Y"/>
             </drop-down>
         </field>
         <field name="parentPeriodId">
@@ -755,19 +755,19 @@ under the License.
         <auto-fields-entity entity-name="GlJournal" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="glJournalId" widget-style="buttontext">
-            <hyperlink target="SetupGlJournals" description="${glJournalId}">
+            <hyperlink description="${glJournalId}" target="SetupGlJournals">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
             </hyperlink>
         </field>
         <field name="remove" title=" " widget-style="buttontext">
-            <hyperlink target="deleteGlJournal" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteGlJournal">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
             </hyperlink>
         </field>
     </form>
 
     <form name="ListProductGlAccounts" type="list" target="updateProductGlAccount" list-name="productGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updateProductGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
@@ -780,7 +780,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteProductGlAccount" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteProductGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="productId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
@@ -812,7 +812,7 @@ under the License.
     </form>
 
     <form name="ListFinAccountTypeGlAccounts" type="list" target="updateFinAccountTypeGlAccount" list-name="finAccountTypeGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updateFinAccountTypeGlAccount"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="finAccountTypeId"><display-entity entity-name="FinAccountType"/></field>
@@ -825,7 +825,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteFinAccountTypeGlAccount" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteFinAccountTypeGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="finAccountTypeId"/>
             </hyperlink>
         </field>
@@ -852,7 +852,7 @@ under the License.
     </form>
 
     <form name="ListProductCategoryGlAccounts" type="list" target="updateProductCategoryGlAccount" list-name="productCategoryGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updateProductCategoryGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
@@ -865,7 +865,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteProductCategoryGlAccount" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteProductCategoryGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="productCategoryId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
@@ -897,7 +897,7 @@ under the License.
     </form>
 
     <form name="ListVarianceReasonGlAccounts" type="list" target="updateVarianceReasonGlAccount" list-name="varianceReasonGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updateVarianceReasonGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="varianceReasonId"><display-entity entity-name="VarianceReason"/></field>
@@ -910,7 +910,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteVarianceReasonGlAccount" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteVarianceReasonGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="varianceReasonId"/>
             </hyperlink>
         </field>
@@ -939,7 +939,7 @@ under the License.
     </form>
 
     <form name="ListCreditCardTypeGlAccounts" type="list" target="updateCreditCardTypeGlAccount" list-name="creditCardTypeGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updateCreditCardTypeGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
@@ -951,7 +951,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteCreditCardTypeGlAccount" description="${uiLabelMap.CommonRemove}">
+            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteCreditCardTypeGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="cardType"/>
             </hyperlink>
         </field>
@@ -963,7 +963,7 @@ under the License.
         <field name="organizationPartyId"><hidden/></field>
         <field name="cardType">
             <drop-down allow-empty="false">
-                <entity-options entity-name="Enumeration" description="${enumCode}" key-field-name="enumId">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumCode}">
                     <entity-constraint name="enumTypeId" operator="equals" value="CREDIT_CARD_TYPE"/>
                     <entity-order-by field-name="enumId"/>
                 </entity-options>
@@ -1003,7 +1003,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteOrganizationTaxAuthorityGlAccount" description="${uiLabelMap.CommonDelete}">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteOrganizationTaxAuthorityGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="taxAuthGeoId"/><parameter param-name="taxAuthPartyId"/>
             </hyperlink>
         </field>
@@ -1035,11 +1035,11 @@ under the License.
     </form>
 
     <form name="ListPartyGlAccounts" type="list" target="updatePartyGlAccount" list-name="partyGlAccounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" separate-columns="true">
         <auto-fields-service service-name="updatePartyGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
         <field name="partyId">
-            <hyperlink target="/partymgr/control/viewprofile" description="${partyId}" target-type="inter-app">
+            <hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
@@ -1052,7 +1052,7 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deletePartyGlAccount" description="${uiLabelMap.CommonDelete}">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyGlAccount">
                 <parameter param-name="organizationPartyId"/><parameter param-name="partyId"/><parameter param-name="glAccountId"/><parameter param-name="roleTypeId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
@@ -1131,7 +1131,7 @@ under the License.
             </service>
         </actions>
         <field name="glAccountCategoryId" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${glAccountCategoryId}" target="EditGlAccountCategory">
+            <hyperlink description="${glAccountCategoryId}" target="EditGlAccountCategory" also-hidden="false">
                 <parameter param-name="glAccountCategoryId"/>
                 <parameter param-name="glAccountCategoryTypeId"/>
             </hyperlink>
@@ -1166,7 +1166,7 @@ under the License.
         <field name="fromDate"><display/></field>
         <field name="thruDate"><date-time/></field>
         <field name="deleteLink" title="" widget-style="buttontext">
-            <hyperlink target="deleteGlAccountCategoryMember" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteGlAccountCategoryMember" also-hidden="false">
                 <parameter param-name="glAccountId" from-field="glAccountId"/>
                 <parameter param-name="glAccountCategoryId" from-field="glAccountCategoryId"/>
                 <parameter param-name="fromDate" from-field="fromDate"/>
@@ -1193,7 +1193,7 @@ under the License.
         <auto-fields-service service-name="createFixedAssetTypeGlAccount" default-field-type="edit"/>
         <field name="fixedAssetId">
             <drop-down allow-empty="false">
-                <option key="_NA_" description="${uiLabelMap.CommonAll}"/>
+                <option key="${uiLabelMap.CommonAll}" description="_NA_"/>
                 <entity-options entity-name="FixedAsset" description="${fixedAssetId} - ${fixedAssetName}">
                     <entity-constraint name="partyId" operator="equals" env-name="organizationPartyId"/>
                     <entity-order-by field-name="fixedAssetId"/>
@@ -1202,7 +1202,7 @@ under the License.
         </field>
         <field name="fixedAssetTypeId">
             <drop-down allow-empty="false">
-                <option key="_NA_" description="${uiLabelMap.CommonAll}"/>
+                <option key="${uiLabelMap.CommonAll}" description="_NA_"/>
                 <entity-options entity-name="FixedAssetType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
@@ -1281,7 +1281,7 @@ under the License.
         <field name="profitGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="lossGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="deleteFixedAssetTypeGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteFixedAssetTypeGlAccount" also-hidden="false">
                 <parameter param-name="fixedAssetTypeId"/>
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="organizationPartyId"/>

@@ -139,6 +139,9 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <include-menu name="ProductStoreSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                                                <container style="button-bar button-style-2">
+                                                    <link target="EditProductStore"  text="${uiLabelMap.ProductNewProductStore}" style="buttontext create" url-mode="plain"/>
+                                                </container>
                                             </widgets>
                                         </section>
                                     </widgets>
@@ -245,8 +248,6 @@ under the License.
         <section>
             <widgets>
                 <include-screen name="keywordsearchbox"/>
-<!--                <include-screen name="sidecatalogs"/>-->
-<!--                <include-screen name="sidedeepcategory"/>-->
                 <include-screen name="categorytree"/>
                 <include-screen name="miniproductlist"/>
             </widgets>
@@ -260,30 +261,6 @@ under the License.
             <widgets>
                 <screenlet id="ProductKeywordsPanel" title="${uiLabelMap.ProductSearchProducts}" collapsible="true">
                     <platform-specific><html><html-template location="component://product/template/find/KeywordSearchBox.ftl"/></html></platform-specific>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="sidecatalogs">
-        <section>
-            <actions>
-                <script location="component://product/groovyScripts/catalog/find/SideCatalogs.groovy"/>
-            </actions>
-            <widgets>
-                <screenlet id="ProductBrowseCatalogsPanel" title="${uiLabelMap.ProductBrowseCatalogs}" collapsible="true">
-                    <platform-specific><html><html-template location="component://product/template/find/SideCatalogs.ftl"/></html></platform-specific>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
-    <screen name="sidedeepcategory">
-        <section>
-            <actions>
-                <script location="component://product/groovyScripts/catalog/find/SideDeepCategory.groovy"/>
-            </actions>
-            <widgets>
-                <screenlet id="ProductBrowseCategoriesPanel" title="${uiLabelMap.ProductBrowseCategories}" collapsible="true">
-                    <platform-specific><html><html-template location="component://product/template/find/SideDeepCategory.ftl"/></html></platform-specific>
                 </screenlet>
             </widgets>
         </section>
@@ -361,7 +338,7 @@ under the License.
     <screen name="ProductStoreGroupTree">
         <section>
             <actions>
-                <entity-one value-field="parentProductStoreGroup" entity-name="ProductStoreGroup"/>
+                <entity-one entity-name="ProductStoreGroup" value-field="parentProductStoreGroup"/>
                 <entity-condition entity-name="ProductStoreGroup" list="parentProductStoreGroups">
                     <condition-expr field-name="primaryParentGroupId" from-field="nullField"/>
                 </entity-condition>

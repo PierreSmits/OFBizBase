@@ -35,7 +35,7 @@ under the License.
 
         <field name="siteName"><text size="30" maxlength="60"/></field>
         <field name="enableHttps">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+            <drop-down allow-empty="true"><option key="${uiLabelMap.CommonY}" description="Y"/><option key="${uiLabelMap.CommonN}" description="N"/></drop-down>
         </field>
 
         <field name="productStoreId">
@@ -93,7 +93,7 @@ under the License.
             </service>
         </actions>
         <field name="pathAlias" sort-field="true" widget-style="buttontext">
-            <hyperlink target="EditWebSitePathAlias?webSiteId=${webSiteId}&amp;pathAlias=${pathAlias}" description="${pathAlias}"></hyperlink>
+            <hyperlink description="${pathAlias}" target="EditWebSitePathAlias?webSiteId=${webSiteId}&amp;pathAlias=${pathAlias}"></hyperlink>
         </field>        
         <field name="aliasTo" sort-field="true"><display/></field>
         <field name="contentId" sort-field="true">
@@ -107,7 +107,7 @@ under the License.
         <field name="fromDate" sort-field="true"><display/></field>
         <field name="thruDate" sort-field="true"><display/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="removeWebSitePathAlias" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removeWebSitePathAlias" also-hidden="false">
               <parameter param-name="webSiteId"/>
               <parameter param-name="pathAlias"/>
             </hyperlink>
@@ -161,7 +161,7 @@ under the License.
 
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="RemoveWebSiteContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="RemoveWebSiteContent" also-hidden="false">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contentId"/>
                 <parameter param-name="webSiteContentTypeId"/>
@@ -226,7 +226,7 @@ under the License.
         <field name="thruDate"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" title=" " widget-style="buttontext">
-            <hyperlink target="removeWebSiteRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removeWebSiteRole" also-hidden="false">
                 <parameter param-name="webSiteId" from-field="webSiteRole.webSiteId"/>
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>
                 <parameter param-name="roleTypeId" from-field="webSiteRole.roleTypeId"/>
@@ -253,7 +253,7 @@ under the License.
         <field name="webSiteId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.Catalog}">
             <drop-down>
-                <option key="all" description="All"/>
+                <option key="All" description="all"/>
                 <entity-options description="${prodCatalogId}" entity-name="ProductStoreCatalog">
                     <entity-constraint name="productStoreId" value="${webSite.productStoreId}"/>
                 </entity-options>
@@ -261,9 +261,9 @@ under the License.
         </field>
         <field name="typeGenerate" title="Generate Type">
             <check all-checked="false">
-                <option key="category" description="Category"/>
-                <option key="product" description="Product"/>
-                <option key="content" description="Content"/>
+                <option key="Category" description="category"/>
+                <option key="Product" description="product"/>
+                <option key="Content" description="content"/>
             </check>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
@@ -310,7 +310,7 @@ under the License.
         <field name="thruDate"><date-time/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="deleteButton" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteWebSiteContactList">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contactListId"/>
                 <parameter param-name="fromDate"/>

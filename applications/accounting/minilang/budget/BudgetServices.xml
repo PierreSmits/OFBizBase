@@ -24,7 +24,7 @@ under the License.
     <!-- create a new Budget header record -->
     <simple-method method-name="createBudget" short-description="Create an Budget">
           <!-- create new entity and create all the fields -->
-        <make-value value-field="newEntity" entity-name="Budget"/>
+        <make-value entity-name="Budget" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
         <!-- create a non existing ID if not supplied -->
@@ -40,22 +40,22 @@ under the License.
 
     <!-- update Budget Status -->
     <simple-method method-name="updateBudgetStatus" short-description="Update Budget Status">
-        <entity-and list="budgetStatuses" entity-name="BudgetStatus">
+        <entity-and entity-name="BudgetStatus" list="budgetStatuses">
             <field-map field-name="budgetId" from-field="parameters.budgetId"/>
             <order-by field-name="-statusDate"/>
         </entity-and>
         <if-not-empty field="budgetStatuses">
             <first-from-list entry="budgetStatus" list="budgetStatuses"/>
-            <entity-one value-field="statusValidChange" entity-name="StatusValidChange">
+            <entity-one entity-name="StatusValidChange" value-field="statusValidChange">
                 <field-map field-name="statusId" from-field="budgetStatus.statusId"/>
                 <field-map field-name="statusIdTo" from-field="parameters.statusId"/>
             </entity-one>
             <if-not-empty field="statusValidChange">
-                <set-service-fields service-name="createBudgetStatus" to-map="createBudgetStatusMap" map="parameters" mode="IN"/>
+                <set-service-fields service-name="createBudgetStatus" map="parameters" to-map="createBudgetStatusMap"/>
                 <call-service service-name="createBudgetStatus" in-map-name="createBudgetStatusMap"/>
             </if-not-empty>
             <else>
-                <set-service-fields service-name="createBudgetStatus" to-map="createBudgetStatusMap" map="parameters" mode="IN"/>
+                <set-service-fields service-name="createBudgetStatus" map="parameters" to-map="createBudgetStatusMap"/>
                 <call-service service-name="createBudgetStatus" in-map-name="createBudgetStatusMap"/>
             </else>
         </if-not-empty>

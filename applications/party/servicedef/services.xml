@@ -40,8 +40,7 @@ under the License.
         <attribute name="_uploadedFile_fileName" type="String" mode="IN" optional="false"/>
         <attribute name="_uploadedFile_contentType" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="removeAddressMatchMap" engine="simple" default-entity-name="AddressMatchMap" auth="true"
-            location="component://party/minilang/party/PartyServices.xml" invoke="deleteAddressMatchMap">
+    <service name="removeAddressMatchMap" engine="entity-auto" default-entity-name="AddressMatchMap" auth="true" invoke="delete">
         <description>Delete an AddressMatchMap record</description>
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
@@ -393,6 +392,11 @@ under the License.
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingContactMechTypeId"/>
+            </type-validate>
+        </attribute>
     </service>
     <service name="updateContactMech" engine="simple"
             location="component://party/minilang/contact/ContactMechServices.xml" invoke="updateContactMech" auth="true">
@@ -563,22 +567,19 @@ under the License.
     </service>
 
     <!-- contact mech attribute services -->
-    <service name="createContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
-            location="component://party/minilang/contact/ContactMechServices.xml" invoke="createContactMechAttribute" auth="true">
+    <service name="createContactMechAttribute" engine="entity-auto" default-entity-name="ContactMechAttribute" invoke="create" auth="true">
         <description>create a contact mech attribute record</description>
         <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
-            location="component://party/minilang/contact/ContactMechServices.xml" invoke="updateContactMechAttribute" auth="true">
+    <service name="updateContactMechAttribute" engine="entity-auto" default-entity-name="ContactMechAttribute" invoke="update" auth="true">
         <description>updates a contact mech attribute record</description>
         <permission-service service-name="partyBasePermissionCheck" main-action="UPDATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeContactMechAttribute" engine="simple" default-entity-name="ContactMechAttribute"
-            location="component://party/minilang/contact/ContactMechServices.xml" invoke="removeContactMechAttribute" auth="true">
+    <service name="removeContactMechAttribute" engine="entity-auto" default-entity-name="ContactMechAttribute" invoke="delete" auth="true">
         <description>removes a contact mech attribute record</description>
         <permission-service service-name="partyBasePermissionCheck" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -610,12 +611,10 @@ under the License.
     </service>
 
     <!-- ContactMechLink services -->
-    <service name="createContactMechLink" default-entity-name="ContactMechLink" engine="simple"
-            location="component://party/minilang/contact/ContactMechServices.xml" invoke="createContactMechLink" auth="true">
+    <service name="createContactMechLink" default-entity-name="ContactMechLink" engine="entity-auto" invoke="create" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="deleteContactMechLink" default-entity-name="ContactMechLink" engine="simple"
-            location="component://party/minilang/contact/ContactMechServices.xml" invoke="deleteContactMechLink" auth="true">
+    <service name="deleteContactMechLink" default-entity-name="ContactMechLink" engine="entity-auto" invoke="delete" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -801,6 +800,11 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="updateCommunicationEventPurpose" default-entity-name="CommunicationEventPurpose" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a CommunicationEventPurpose</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
     <service name="removeCommunicationEventPurpose" default-entity-name="CommunicationEventPurpose" engine="entity-auto" invoke="delete" auth="true">
         <description>Remove a Communication Event Purpose</description>
         <permission-service service-name="partyCommunicationEventPermissionCheck" main-action="DELETE"/>
@@ -851,8 +855,24 @@ under the License.
         <description>Creates a WorkEffort entity and CommunicationEventWorkEff</description>
         <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="WorkEffort"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="WorkEffort"/>
-        <auto-attributes include="pk" mode="INOUT" optional="true" entity-name="CommunicationEventWorkEff"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false" entity-name="CommunicationEventWorkEff"/>
         <auto-attributes include="nonpk" mode="IN" optional="true" entity-name="CommunicationEventWorkEff"/>
+        <override name="workEffortId" optional="true"/>
+        <override name="currentStatusId" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingCurrentStatusId"/>
+            </type-validate>
+        </override>
+        <override name="workEffortName" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingWorkEffortName"/>
+            </type-validate>
+        </override>
+        <override name="workEffortTypeId" optional="false">
+            <type-validate>
+                <fail-property resource="WorkEffortUiLabels" property="PartyRequiredFieldMissingWorkEffortTypeId"/>
+            </type-validate>
+        </override>
     </service>
     <service name="setCommEventRoleToRead" engine="simple" default-entity-name="CommunicationEventRole"
         location="component://party/minilang/communication/CommunicationEventServices.xml" invoke="setCommEventRoleToRead" auth="false">
@@ -1211,6 +1231,7 @@ under the License.
         <attribute name="setShippingPurpose" type="String" mode="IN" optional="true"/>
         <attribute name="setBillingPurpose" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <override name="contactMechId" optional="false"/>
     </service>
     <service name="updateContactMechAndPurposes" engine="simple" location="component://party/minilang/contact/PartyContactMechServices.xml" invoke="updateContactMechAndPurposes">
         <description>Update postal address, telecom number and purposes. The setShippingPurpose and setBillingPurpose enable the service to create purposes for TelecomNumber</description>
@@ -1257,6 +1278,21 @@ under the License.
         <attribute name="userLogin" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <override name="address1" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingAddress1"/>
+            </type-validate>
+        </override>
+        <override name="city" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingCity"/>
+            </type-validate>
+        </override>
+        <override name="postalCode" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingPostalCode"/>
+            </type-validate>
+        </override>
     </service>
 
      <!--  bounced message processing -->
@@ -1301,6 +1337,11 @@ under the License.
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <override name="partyIdTo" optional="false">
+            <type-validate>
+                <fail-property resource="PartyErrorUiLabels" property="PartyRequiredFieldMissingPartyIdTo"/>
+            </type-validate>
+        </override>
     </service>
     
     <!-- send account activated email notification -->
@@ -1368,5 +1409,36 @@ under the License.
     <service name="deleteRoleTypeAttr" default-entity-name="RoleTypeAttr" engine="entity-auto" invoke="delete" auth="true">
         <description>Delete a RoleTypeAttr Record</description>
         <auto-attributes mode="IN" include="pk"/>
+    </service>
+
+    <service name="createNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a NeedType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a NeedType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteNeedType" default-entity-name="NeedType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a NeedType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- CommunicationEventPrpTyp services -->
+    <service name="createCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a CommunicationEventPrpTyp</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a CommunicationEventPrpTyp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteCommunicationEventPrpTyp" default-entity-name="CommunicationEventPrpTyp" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a CommunicationEventPrpTyp</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

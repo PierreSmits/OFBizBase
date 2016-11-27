@@ -2315,7 +2315,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // strip legacy viewIndex/viewSize params from the query string
         String queryString = UtilHttp.stripViewParamsFromQueryString(str, "" + paginatorNumber);
         // strip parameterized index/size params from the query string
-        HashSet<String> paramNames = new HashSet<String>();
+        Set<String> paramNames = new HashSet<String>();
         paramNames.add(viewIndexParam);
         paramNames.add(viewSizeParam);
         queryString = UtilHttp.stripNamedParamsFromQueryString(queryString, paramNames);
@@ -2339,7 +2339,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         } else if (!prepLinkText.endsWith("?")) {
             prepLinkText += "&amp;";
         }
-        if (!UtilValidate.isEmpty(queryString) && !queryString.equals("null")) {
+        if (UtilValidate.isNotEmpty(queryString) && !queryString.equals("null")) {
             prepLinkText += queryString + "&amp;";
         }
         prepLinkSizeText = prepLinkText + viewSizeParam + "='+this.value+'" + "&amp;" + viewIndexParam + "=0";

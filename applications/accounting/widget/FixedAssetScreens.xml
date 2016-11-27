@@ -110,6 +110,7 @@ under the License.
                                         <label style="h1" text="${uiLabelMap[titleProperty]}"/>
                                     </fail-widgets>
                                 </section>
+                                    <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="buttontext create"/></container>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -138,9 +139,6 @@ under the License.
                             <condition>
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
                             </condition>
-                            <widgets>
-                                <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="buttontext create"/></container>
-                            </widgets>
                         </section>
                         <include-form name="EditFixedAsset" location="component://accounting/widget/FixedAssetForms.xml"/>
                     </decorator-section>
@@ -616,7 +614,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFixedAssetGeoLocation"/>
                 <set field="tabButtonItem" value="FixedAssetGeoLocation"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
-                <entity-one value-field="fixedAsset" entity-name="FixedAsset"/>
+                <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 <script location="component://accounting/groovyScripts/fixedasset/FixedAssetGeoLocation.groovy"/>
             </actions>
             <widgets>

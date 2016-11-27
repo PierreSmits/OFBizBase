@@ -65,12 +65,14 @@ final class AdminServer extends Thread {
     public void run() {
         System.out.println("Admin socket configured on - " + config.adminAddress + ":" + config.adminPort);
         while (!Thread.interrupted()) {
-            try {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : "
+            try (Socket clientSocket = serverSocket.accept()){
+
+                System.out.println("Received connection from - " 
+                        + clientSocket.getInetAddress() + " : "
                         + clientSocket.getPort());
+
                 processClientRequest(clientSocket, loaders, serverState);
-                clientSocket.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -78,36 +80,23 @@ final class AdminServer extends Thread {
     }
 
     private void processClientRequest(Socket client, List<StartupLoader> loaders, AtomicReference<ServerState> serverState) throws IOException {
-        BufferedReader reader = null;
-        PrintWriter writer = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            writer = new PrintWriter(client.getOutputStream(), true);
 
-            executeClientRequest(reader, writer, loaders, serverState);
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-            if (writer != null) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                PrintWriter writer = new PrintWriter(client.getOutputStream(), true)) {
+
+            // read client request and prepare response
+            String clientRequest = reader.readLine();
+            OfbizSocketCommand clientCommand = determineClientCommand(clientRequest);
+            String serverResponse = prepareResponseToClient(clientCommand, serverState);
+
+            // send response back to client
+            writer.println(serverResponse);
+
+            // if the client request is shutdown, execute shutdown sequence
+            if(clientCommand.equals(OfbizSocketCommand.SHUTDOWN)) {
                 writer.flush();
-                writer.close();
+                StartupControlPanel.stop(loaders, serverState, this);
             }
-        }
-    }
-
-    private void executeClientRequest(BufferedReader reader, PrintWriter writer,
-            List<StartupLoader> loaders, AtomicReference<ServerState> serverState) throws IOException {
-
-        String clientRequest = reader.readLine();
-        OfbizSocketCommand clientCommand = determineClientCommand(clientRequest);
-        String serverResponse = prepareResponseToClient(clientCommand, serverState);
-        
-        writer.println(serverResponse);
-
-        if(clientCommand.equals(OfbizSocketCommand.SHUTDOWN)) {
-            writer.flush();
-            StartupControlPanel.stop(loaders, serverState, this);
         }
     }
 

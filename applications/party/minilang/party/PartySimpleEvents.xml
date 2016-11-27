@@ -116,6 +116,8 @@ under the License.
              <field field="formInput" type="java.util.Map"/>
          </call-class-method >
          <set-service-fields service-name="updateContentAndUploadedFile" map="formInput.formInput" to-map="partyContentMap"/>
+         <set field="partyContentMap.uploadedFile" from-field="formInput.imageData"/>
+         <set field="partyContentMap._uploadedFile_fileName" from-field="formInput.imageFileName"/>
          <call-service service-name="updateContentAndUploadedFile" in-map-name="partyContentMap" break-on-error="false">
             <result-to-field result-name="contentId" field="contentId"/>
          </call-service>
@@ -135,7 +137,7 @@ under the License.
             </call-service>
 
             <now field="nowTimestamp"/>
-            <make-value value-field="partyGeoPoint" entity-name="PartyGeoPoint"/>
+            <make-value entity-name="PartyGeoPoint" value-field="partyGeoPoint"/>
             <set field="partyGeoPoint.partyId" from-field="parameters.partyId"/>
             <set field="partyGeoPoint.geoPointId" from-field="geoPointId"/>
             <set field="partyGeoPoint.fromDate" from-field="nowTimestamp"/>

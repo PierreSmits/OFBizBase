@@ -17,9 +17,7 @@
  * under the License.
  */
 
-import org.apache.ofbiz.base.util.UtilMisc;
-
-taxAuthorities = from('TaxAuthority').orderBy("taxAuthGeoId", "taxAuthPartyId").queryList();
+taxAuthorities = from('TaxAuthority').orderBy("taxAuthGeoId", "taxAuthPartyId").queryList()
 
 context.taxAuthorityHavingNoGlAccountList = taxAuthorities.findAll { taxAuthority ->
     !taxAuthority.getRelated('TaxAuthorityGlAccount', [organizationPartyId : parameters.get('ApplicationDecorator|organizationPartyId')], null, false)
